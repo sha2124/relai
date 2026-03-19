@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import { buildSystemPrompt } from "@/lib/system-prompt";
+import { summarizeMessages } from "@/lib/summarize";
 
 const client = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
@@ -7,6 +8,9 @@ const client = new OpenAI({
 });
 
 const MODEL = "moonshotai/kimi-k2.5";
+
+// How many recent messages to send as full context
+const RECENT_MESSAGE_COUNT = 20;
 
 export async function POST(request: Request) {
   try {
@@ -16,7 +20,26 @@ export async function POST(request: Request) {
       return Response.json({ error: "Messages are required" }, { status: 400 });
     }
 
-    const systemPrompt = buildSystemPrompt(userProfile, conversationSummary);
+    // If we have more messages than the threshold, summarize older ones
+    let summary = conversationSummary ?? "";
+    let recentMessages = messages;
+
+    if (messages.length > RECENT_MESSAGE_COUNT) {
+      const olderMessages = messages.slice(0, messages.length - RECENT_MESSAGE_COUNT);
+      recentMessages = messages.slice(messages.length - RECENT_MESSAGE_COUNT);
+
+      try {
+        const olderSummary = await summarizeMessages(olderMessages);
+        summary = summary
+          ? `${summary}\n\nMore recent context: ${olderSummary}`
+          : olderSummary;
+      } catch (err) {
+        console.error("[chat] Summary error (continuing without):", err);
+        // Fall back to just using recent messages without summary
+      }
+    }
+
+    const systemPrompt = buildSystemPrompt(userProfile, summary);
 
     const stream = await client.chat.completions.create({
       model: MODEL,
@@ -24,7 +47,7 @@ export async function POST(request: Request) {
       max_tokens: 1024,
       messages: [
         { role: "system", content: systemPrompt },
-        ...messages.map((m: { role: string; content: string }) => ({
+        ...recentMessages.map((m: { role: string; content: string }) => ({
           role: m.role as "user" | "assistant",
           content: m.content,
         })),
@@ -58,7 +81,7 @@ export async function POST(request: Request) {
     console.error("[chat] Error:", err);
     return Response.json(
       { error: "Failed to generate response" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
