@@ -1,0 +1,63 @@
+"use client";
+
+import { useState, useRef, useEffect } from "react";
+
+interface ChatInputProps {
+  onSend: (message: string) => void;
+  disabled?: boolean;
+}
+
+export function ChatInput({ onSend, disabled }: ChatInputProps) {
+  const [input, setInput] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = "auto";
+      textarea.style.height = `${Math.min(textarea.scrollHeight, 150)}px`;
+    }
+  }, [input]);
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const trimmed = input.trim();
+    if (!trimmed || disabled) return;
+    onSend(trimmed);
+    setInput("");
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e);
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="relative flex items-end gap-2">
+      <div className="flex-1 relative">
+        <textarea
+          ref={textareaRef}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="What's on your mind?"
+          disabled={disabled}
+          rows={1}
+          className="w-full resize-none rounded-2xl border border-[#e8e4df] bg-white px-4 py-3 pr-12 text-[15px] text-[#1a1008] placeholder:text-[#c4bbaf] focus:outline-none focus:ring-2 focus:ring-[#4a7c6b]/20 focus:border-[#4a7c6b]/40 disabled:opacity-50 transition-all shadow-sm"
+        />
+        <button
+          type="submit"
+          disabled={disabled || !input.trim()}
+          className="absolute right-2 bottom-2 h-8 w-8 rounded-xl bg-gradient-to-br from-[#4a7c6b] to-[#2d4e43] flex items-center justify-center text-white hover:shadow-md transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:shadow-none"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M22 2L11 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M22 2L15 22l-4-9-9-4L22 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </form>
+  );
+}
