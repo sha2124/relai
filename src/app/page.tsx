@@ -3,17 +3,48 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Chat } from "@/components/Chat";
+import { createClient } from "@/lib/supabase/client";
+import type { User } from "@supabase/supabase-js";
 
 export default function Home() {
   const router = useRouter();
   const [hasProfile, setHasProfile] = useState<boolean | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [checkingAuth, setCheckingAuth] = useState(true);
 
   useEffect(() => {
-    const profile = localStorage.getItem("relai-profile");
-    setHasProfile(!!profile);
+    async function check() {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+
+      if (user) {
+        // Check for profile in Supabase first
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("id")
+          .eq("user_id", user.id)
+          .single();
+
+        if (profile) {
+          setHasProfile(true);
+        } else {
+          // Fall back to localStorage (quiz just completed but not yet saved to DB)
+          const local = localStorage.getItem("relai-profile");
+          setHasProfile(!!local);
+        }
+      } else {
+        // Not logged in — show landing page
+        setHasProfile(false);
+      }
+
+      setCheckingAuth(false);
+    }
+
+    check();
   }, []);
 
-  if (hasProfile === null) {
+  if (checkingAuth || hasProfile === null) {
     return (
       <div className="min-h-[100dvh] bg-gradient-warm flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-[#4a7c6b] border-t-transparent rounded-full animate-spin" />
@@ -21,8 +52,14 @@ export default function Home() {
     );
   }
 
-  if (!hasProfile) {
-    return <Landing onStart={() => router.push("/quiz")} />;
+  if (!user || !hasProfile) {
+    return <Landing onStart={() => {
+      if (!user) {
+        router.push("/auth");
+      } else {
+        router.push("/quiz");
+      }
+    }} />;
   }
 
   return <Chat />;
@@ -55,7 +92,7 @@ function Landing({ onStart }: { onStart: () => void }) {
           <button type="button" onClick={onStart} className="rounded-xl bg-gradient-to-r from-[#4a7c6b] to-[#2d4e43] px-10 py-4 text-white font-semibold text-lg hover:shadow-lg transition-all">
             Take the free quiz
           </button>
-          <p className="text-xs text-[#c4bbaf] mt-4">5 minutes &middot; No sign-up required</p>
+          <p className="text-xs text-[#c4bbaf] mt-4">5 minutes &middot; Free account required</p>
 
           <div className="mt-16 grid grid-cols-3 gap-6 text-center">
             {[
@@ -343,7 +380,7 @@ function Landing({ onStart }: { onStart: () => void }) {
             Ready to understand your patterns?
           </h2>
           <p className="text-[#8a7a66] mb-8">
-            It starts with 14 questions. No sign-up. No credit card. Just honesty.
+            It starts with 14 questions. Free account. No credit card. Just honesty.
           </p>
           <button type="button" onClick={onStart} className="rounded-xl bg-gradient-to-r from-[#4a7c6b] to-[#2d4e43] px-10 py-4 text-white font-semibold text-lg hover:shadow-lg transition-all">
             Take the free quiz

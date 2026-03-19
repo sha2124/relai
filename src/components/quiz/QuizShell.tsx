@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { QUESTIONS, SECTIONS } from "@/lib/quiz/questions";
-import { computeProfile } from "@/lib/quiz/compute-profile";
+import { computeProfile, type UserProfile } from "@/lib/quiz/compute-profile";
+import { createClient } from "@/lib/supabase/client";
 import { QuizCard } from "./QuizCard";
 import { NameInput } from "./NameInput";
 
@@ -36,6 +37,27 @@ export function QuizShell() {
   const section = SECTIONS.find((s) => s.id === question?.section);
   const progress = ((step + 1) / QUESTIONS.length) * 100;
 
+  async function saveProfileToSupabase(profile: UserProfile) {
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    await supabase.from("profiles").upsert({
+      user_id: user.id,
+      name: profile.name,
+      relationship_status: profile.relationshipStatus,
+      relationship_length: profile.relationshipLength,
+      attachment_style: profile.attachmentStyle,
+      communication_style: profile.communicationStyle,
+      conflict_response: profile.conflictResponse,
+      love_language: profile.loveLanguage,
+      goal: profile.goal,
+      goal_label: profile.goalLabel,
+      scores: profile.scores,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: "user_id" });
+  }
+
   function handleAnswer(optionId: string) {
     const newAnswers = { ...answers, [question.id]: optionId };
     setAnswers(newAnswers);
@@ -49,6 +71,7 @@ export function QuizShell() {
         const profile = computeProfile(newAnswers, QUESTIONS);
         localStorage.setItem("relai-profile", JSON.stringify(profile));
         localStorage.removeItem("relai-quiz");
+        saveProfileToSupabase(profile);
         router.push("/profile");
       }
     }, 300);
@@ -60,6 +83,7 @@ export function QuizShell() {
     const profile = computeProfile(newAnswers, QUESTIONS);
     localStorage.setItem("relai-profile", JSON.stringify(profile));
     localStorage.removeItem("relai-quiz");
+    saveProfileToSupabase(profile);
     router.push("/profile");
   }
 

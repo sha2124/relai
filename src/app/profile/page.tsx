@@ -3,22 +3,57 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { UserProfile } from "@/lib/quiz/compute-profile";
+import { createClient } from "@/lib/supabase/client";
 
 export default function ProfilePage() {
   const router = useRouter();
   const [profile, setProfile] = useState<UserProfile | null>(null);
 
   useEffect(() => {
-    const saved = localStorage.getItem("relai-profile");
-    if (saved) {
-      try {
-        setProfile(JSON.parse(saved));
-      } catch {
+    async function load() {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (user) {
+        // Try Supabase first
+        const { data } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("user_id", user.id)
+          .single();
+
+        if (data) {
+          // Map DB columns back to UserProfile shape
+          setProfile({
+            name: data.name,
+            relationshipStatus: data.relationship_status,
+            relationshipLength: data.relationship_length,
+            attachmentStyle: data.attachment_style,
+            communicationStyle: data.communication_style,
+            conflictResponse: data.conflict_response,
+            loveLanguage: data.love_language,
+            goal: data.goal,
+            goalLabel: data.goal_label,
+            scores: data.scores ?? {},
+          });
+          return;
+        }
+      }
+
+      // Fall back to localStorage
+      const saved = localStorage.getItem("relai-profile");
+      if (saved) {
+        try {
+          setProfile(JSON.parse(saved));
+        } catch {
+          router.push("/quiz");
+        }
+      } else {
         router.push("/quiz");
       }
-    } else {
-      router.push("/quiz");
     }
+
+    load();
   }, [router]);
 
   if (!profile) {

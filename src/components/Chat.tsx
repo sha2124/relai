@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { ChatMessage } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
+import { createClient } from "@/lib/supabase/client";
 
 interface Message {
   role: "user" | "assistant";
@@ -10,34 +12,87 @@ interface Message {
 }
 
 export function Chat() {
+  const router = useRouter();
   const [messages, setMessages] = useState<Message[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [userProfile, setUserProfile] = useState<string | undefined>();
   const [userName, setUserName] = useState("");
+  const [userId, setUserId] = useState<string | null>(null);
+  const [loadingHistory, setLoadingHistory] = useState(true);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Load profile from localStorage
+  // Load profile and conversation history from Supabase
   useEffect(() => {
-    const saved = localStorage.getItem("relai-profile");
-    if (saved) {
-      try {
-        const profile = JSON.parse(saved);
+    async function load() {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        router.push("/auth");
+        return;
+      }
+
+      setUserId(user.id);
+
+      // Load profile from Supabase
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", user.id)
+        .single();
+
+      if (profile) {
         setUserName(profile.name ?? "");
         setUserProfile(
           `Name: ${profile.name}\n` +
-          `Relationship status: ${profile.relationshipStatus}\n` +
-          `Attachment style: ${profile.attachmentStyle?.label} — ${profile.attachmentStyle?.description}\n` +
-          `Communication style: ${profile.communicationStyle?.label} — ${profile.communicationStyle?.description}\n` +
-          `Conflict response: ${profile.conflictResponse?.label} — ${profile.conflictResponse?.description}\n` +
-          `Love language (needs): ${profile.loveLanguage?.receivingLabel}\n` +
-          `Love language (gives): ${profile.loveLanguage?.givingLabel}\n` +
-          `Goal: ${profile.goalLabel}`
+          `Relationship status: ${profile.relationship_status}\n` +
+          `Attachment style: ${profile.attachment_style?.label} — ${profile.attachment_style?.description}\n` +
+          `Communication style: ${profile.communication_style?.label} — ${profile.communication_style?.description}\n` +
+          `Conflict response: ${profile.conflict_response?.label} — ${profile.conflict_response?.description}\n` +
+          `Love language (needs): ${profile.love_language?.receivingLabel}\n` +
+          `Love language (gives): ${profile.love_language?.givingLabel}\n` +
+          `Goal: ${profile.goal_label}`
         );
-      } catch {
-        // ignore
+      } else {
+        // Fall back to localStorage
+        const saved = localStorage.getItem("relai-profile");
+        if (saved) {
+          try {
+            const p = JSON.parse(saved);
+            setUserName(p.name ?? "");
+            setUserProfile(
+              `Name: ${p.name}\n` +
+              `Relationship status: ${p.relationshipStatus}\n` +
+              `Attachment style: ${p.attachmentStyle?.label} — ${p.attachmentStyle?.description}\n` +
+              `Communication style: ${p.communicationStyle?.label} — ${p.communicationStyle?.description}\n` +
+              `Conflict response: ${p.conflictResponse?.label} — ${p.conflictResponse?.description}\n` +
+              `Love language (needs): ${p.loveLanguage?.receivingLabel}\n` +
+              `Love language (gives): ${p.loveLanguage?.givingLabel}\n` +
+              `Goal: ${p.goalLabel}`
+            );
+          } catch {
+            // ignore
+          }
+        }
       }
+
+      // Load recent conversation history (last 50 messages)
+      const { data: history } = await supabase
+        .from("messages")
+        .select("role, content")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: true })
+        .limit(50);
+
+      if (history && history.length > 0) {
+        setMessages(history.map((m) => ({ role: m.role as "user" | "assistant", content: m.content })));
+      }
+
+      setLoadingHistory(false);
     }
-  }, []);
+
+    load();
+  }, [router]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -45,11 +100,33 @@ export function Chat() {
     }
   }, [messages]);
 
+  async function saveMessage(role: "user" | "assistant", content: string) {
+    if (!userId) return;
+    const supabase = createClient();
+    await supabase.from("messages").insert({
+      user_id: userId,
+      role,
+      content,
+    });
+  }
+
+  async function handleSignOut() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    localStorage.removeItem("relai-profile");
+    localStorage.removeItem("relai-quiz");
+    router.push("/");
+    router.refresh();
+  }
+
   async function handleSend(content: string) {
     const userMessage: Message = { role: "user", content };
     const updatedMessages = [...messages, userMessage];
     setMessages(updatedMessages);
     setIsStreaming(true);
+
+    // Save user message to DB
+    saveMessage("user", content);
 
     setMessages([...updatedMessages, { role: "assistant", content: "" }]);
 
@@ -92,6 +169,11 @@ export function Chat() {
           }
         }
       }
+
+      // Save assistant message to DB
+      if (assistantContent) {
+        saveMessage("assistant", assistantContent);
+      }
     } catch (err) {
       console.error("Chat error:", err);
       setMessages([
@@ -107,23 +189,40 @@ export function Chat() {
     }
   }
 
+  if (loadingHistory) {
+    return (
+      <div className="min-h-[100dvh] bg-gradient-warm flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-[#4a7c6b] border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col h-[100dvh] bg-gradient-warm">
       {/* Header */}
       <header className="shrink-0 bg-white/60 backdrop-blur-md border-b border-[#e8e4df]/60 px-6 py-3.5">
-        <div className="max-w-2xl mx-auto flex items-center gap-3">
-          <div className="relative">
-            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#4a7c6b] to-[#2d4e43] flex items-center justify-center shadow-sm">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-white">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+        <div className="max-w-2xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#4a7c6b] to-[#2d4e43] flex items-center justify-center shadow-sm">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-white">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-[#68b89e] border-2 border-white" />
             </div>
-            <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-[#68b89e] border-2 border-white" />
+            <div>
+              <h1 className="text-[15px] font-semibold text-[#1a1008] tracking-tight">RelAI</h1>
+              <p className="text-[11px] text-[#8a7a66]">Your relationship coach</p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-[15px] font-semibold text-[#1a1008] tracking-tight">RelAI</h1>
-            <p className="text-[11px] text-[#8a7a66]">Your relationship coach</p>
-          </div>
+          <button
+            type="button"
+            onClick={handleSignOut}
+            className="text-xs text-[#8a7a66] hover:text-[#1a1008] transition-colors"
+          >
+            Sign out
+          </button>
         </div>
       </header>
 
