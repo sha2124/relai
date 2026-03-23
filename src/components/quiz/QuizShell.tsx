@@ -68,7 +68,14 @@ export function QuizShell() {
     // Show analyzing animation, then navigate
     setAnalyzing(true);
     setTimeout(() => {
-      router.push("/profile");
+      // Check if there's a pending partner invite to return to
+      const pendingInvite = localStorage.getItem("relai-partner-invite");
+      if (pendingInvite) {
+        localStorage.removeItem("relai-partner-invite");
+        router.push(`/partner/join/${pendingInvite}`);
+      } else {
+        router.push("/profile");
+      }
     }, 3200);
   }
 

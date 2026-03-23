@@ -71,6 +71,8 @@ export default function PartnerJoinPage() {
         .single();
 
       if (!myProfile) {
+        // Store invite code so quiz redirects back here after completion
+        localStorage.setItem("relai-partner-invite", code);
         setStatus("no-profile");
         return;
       }
