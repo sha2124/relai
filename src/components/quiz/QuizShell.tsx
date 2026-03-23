@@ -108,24 +108,24 @@ export function QuizShell() {
     return (
       <div className="min-h-[100dvh] bg-gradient-warm flex flex-col items-center justify-center px-6">
         <div className="max-w-sm w-full text-center">
-          <div className="h-20 w-20 rounded-full bg-gradient-to-br from-[#4a7c6b] to-[#2d4e43] flex items-center justify-center mx-auto mb-8 analyzing-pulse">
+          <div className="h-20 w-20 rounded-full bg-gradient-to-br from-[#8d4837] to-[#6d2e20] flex items-center justify-center mx-auto mb-8 analyzing-pulse">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="text-white">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
 
-          <h2 className="font-heading text-2xl font-semibold text-[#1a1008] mb-3">
+          <h2 className="font-heading text-2xl font-semibold text-[#312e29] mb-3">
             Analyzing your patterns...
           </h2>
-          <p className="text-sm text-[#8a7a66] mb-8">
+          <p className="text-sm text-[#7a766f] mb-8">
             Mapping your attachment style, communication patterns, and relationship dynamics
           </p>
 
           {/* Progress bar */}
-          <div className="h-1.5 bg-[#e8e4df] rounded-full overflow-hidden">
+          <div className="h-1.5 bg-[#e2dcd1] rounded-full overflow-hidden">
             <div
               className="h-full rounded-full analyzing-bar"
-              style={{ background: "linear-gradient(90deg, #4a7c6b, #2d4e43)" }}
+              style={{ background: "linear-gradient(90deg, #8d4837, #6d2e20)" }}
             />
           </div>
         </div>
@@ -142,7 +142,7 @@ export function QuizShell() {
         <QuizHeader
           progress={progress}
           sectionLabel={section?.label ?? ""}
-          sectionColor={section?.color ?? "#4a7c6b"}
+          sectionColor={section?.color ?? "#8d4837"}
           onBack={handleBack}
           step={step}
         />
@@ -162,7 +162,7 @@ export function QuizShell() {
       <QuizHeader
         progress={progress}
         sectionLabel={section?.label ?? ""}
-        sectionColor={section?.color ?? "#4a7c6b"}
+        sectionColor={section?.color ?? "#8d4837"}
         onBack={handleBack}
         step={step}
       />
@@ -200,7 +200,7 @@ function QuizHeader({
             <button
               type="button"
               onClick={onBack}
-              className="text-[#8a7a66] hover:text-[#1a1008] transition-colors text-sm flex items-center gap-1"
+              className="text-[#7a766f] hover:text-[#312e29] transition-colors text-sm flex items-center gap-1"
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <path d="M10 3L5 8l5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -219,12 +219,12 @@ function QuizHeader({
         </div>
 
         {/* Progress bar */}
-        <div className="h-1.5 bg-[#e8e4df] rounded-full overflow-hidden">
+        <div className="h-1.5 bg-[#e2dcd1] rounded-full overflow-hidden">
           <div
             className="h-full rounded-full transition-all duration-500 ease-out"
             style={{
               width: `${progress}%`,
-              background: `linear-gradient(90deg, #4a7c6b, #2d4e43)`,
+              background: `linear-gradient(90deg, #8d4837, #6d2e20)`,
             }}
           />
         </div>

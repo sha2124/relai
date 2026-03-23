@@ -152,7 +152,7 @@ export default function JournalPage() {
   if (loading) {
     return (
       <div className="min-h-[100dvh] bg-gradient-warm flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-[#4a7c6b] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[#8d4837] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -165,33 +165,33 @@ export default function JournalPage() {
           <button
             type="button"
             onClick={() => router.push("/")}
-            className="text-sm text-[#8a7a66] hover:text-[#4a7c6b] transition-colors mb-8 flex items-center gap-1"
+            className="text-sm text-[#7a766f] hover:text-[#8d4837] transition-colors mb-8 flex items-center gap-1"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
             Back to chat
           </button>
 
           <div className="flex items-center justify-between mb-3">
-            <h1 className="font-heading text-3xl sm:text-4xl font-semibold text-[#1a1008] tracking-tight">
+            <h1 className="font-heading text-3xl sm:text-4xl font-semibold text-[#312e29] tracking-tight">
               Journal
             </h1>
             <button
               type="button"
               onClick={() => { resetForm(); setShowForm(true); }}
-              className="rounded-xl bg-gradient-to-r from-[#4a7c6b] to-[#2d4e43] px-4 py-2.5 text-white text-sm font-medium hover:shadow-md transition-all flex items-center gap-1.5"
+              className="rounded-xl bg-gradient-to-r from-[#8d4837] to-[#6d2e20] px-4 py-2.5 text-white text-sm font-medium hover:shadow-md transition-all flex items-center gap-1.5"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               New entry
             </button>
           </div>
-          <p className="text-[#8a7a66] text-base leading-relaxed mb-8">
+          <p className="text-[#7a766f] text-base leading-relaxed mb-8">
             Log relationship moments. Your AI coach will reference these in sessions.
           </p>
 
           {/* ── New Entry Form ── */}
           {showForm && (
-            <div className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-6 shadow-sm mb-6 msg-enter">
-              <p className="text-xs font-medium tracking-wide uppercase text-[#4a7c6b] mb-4">
+            <div className="bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-2xl p-6 shadow-sm mb-6 msg-enter">
+              <p className="text-xs font-medium tracking-wide uppercase text-[#8d4837] mb-4">
                 {editingId ? "Edit entry" : "New entry"}
               </p>
 
@@ -199,13 +199,13 @@ export default function JournalPage() {
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="What happened today in your relationship? A moment of connection, a conflict, a realization..."
-                className="w-full bg-[#f5f2ee] border border-[#e8e4df] rounded-xl px-4 py-3 text-sm text-[#2d2418] placeholder:text-[#c4bbaf] resize-none focus:outline-none focus:border-[#4a7c6b]/30 transition-colors"
+                className="w-full bg-[#f6f0e6] border border-[#e2dcd1] rounded-xl px-4 py-3 text-sm text-[#312e29] placeholder:text-[#b1ada5] resize-none focus:outline-none focus:border-[#8d4837]/30 transition-colors"
                 rows={4}
               />
 
               {/* Mood selector */}
               <div className="mt-4">
-                <p className="text-xs text-[#8a7a66] mb-2">How are you feeling?</p>
+                <p className="text-xs text-[#7a766f] mb-2">How are you feeling?</p>
                 <div className="flex gap-2">
                   {MOODS.map((m) => (
                     <button
@@ -214,8 +214,8 @@ export default function JournalPage() {
                       onClick={() => setMood(mood === m.value ? null : m.value)}
                       className={`flex flex-col items-center gap-1 px-3 py-2 rounded-xl text-xs transition-all ${
                         mood === m.value
-                          ? "bg-[#4a7c6b]/10 border border-[#4a7c6b]/30 text-[#2d4e43]"
-                          : "bg-[#f5f2ee] border border-transparent text-[#8a7a66] hover:bg-[#ebe7e0]"
+                          ? "bg-[#8d4837]/10 border border-[#8d4837]/30 text-[#6d2e20]"
+                          : "bg-[#f6f0e6] border border-transparent text-[#7a766f] hover:bg-[#ebe7e0]"
                       }`}
                     >
                       <span className="text-lg">{m.emoji}</span>
@@ -227,7 +227,7 @@ export default function JournalPage() {
 
               {/* Tags */}
               <div className="mt-4">
-                <p className="text-xs text-[#8a7a66] mb-2">Tags</p>
+                <p className="text-xs text-[#7a766f] mb-2">Tags</p>
                 <div className="flex flex-wrap gap-2">
                   {TAGS.map((tag) => (
                     <button
@@ -236,8 +236,8 @@ export default function JournalPage() {
                       onClick={() => toggleTag(tag)}
                       className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                         selectedTags.includes(tag)
-                          ? "bg-[#4a7c6b] text-white"
-                          : "bg-[#f5f2ee] text-[#8a7a66] hover:bg-[#ebe7e0]"
+                          ? "bg-[#8d4837] text-white"
+                          : "bg-[#f6f0e6] text-[#7a766f] hover:bg-[#ebe7e0]"
                       }`}
                     >
                       {tag}
@@ -252,14 +252,14 @@ export default function JournalPage() {
                   type="button"
                   onClick={handleSave}
                   disabled={!content.trim() || saving}
-                  className="flex-1 rounded-xl bg-gradient-to-r from-[#4a7c6b] to-[#2d4e43] px-4 py-3 text-white text-sm font-medium hover:shadow-md transition-all disabled:opacity-50"
+                  className="flex-1 rounded-xl bg-gradient-to-r from-[#8d4837] to-[#6d2e20] px-4 py-3 text-white text-sm font-medium hover:shadow-md transition-all disabled:opacity-50"
                 >
                   {saving ? "Saving..." : editingId ? "Update" : "Save entry"}
                 </button>
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="rounded-xl border border-[#e8e4df] bg-white/50 px-4 py-3 text-sm text-[#8a7a66] hover:text-[#1a1008] transition-all"
+                  className="rounded-xl border border-[#e2dcd1] bg-white/50 px-4 py-3 text-sm text-[#7a766f] hover:text-[#312e29] transition-all"
                 >
                   Cancel
                 </button>
@@ -270,20 +270,20 @@ export default function JournalPage() {
           {/* ── Entries ── */}
           {entries.length === 0 && !showForm ? (
             <div className="text-center py-16">
-              <div className="h-20 w-20 rounded-full bg-[#4a7c6b]/10 flex items-center justify-center mx-auto mb-5">
+              <div className="h-20 w-20 rounded-full bg-[#8d4837]/10 flex items-center justify-center mx-auto mb-5">
                 <span className="text-3xl">📓</span>
               </div>
-              <h3 className="font-heading text-xl font-semibold text-[#1a1008] mb-2">
+              <h3 className="font-heading text-xl font-semibold text-[#312e29] mb-2">
                 Start your journal
               </h3>
-              <p className="text-sm text-[#8a7a66] max-w-xs mx-auto mb-6">
+              <p className="text-sm text-[#7a766f] max-w-xs mx-auto mb-6">
                 Log moments from your relationship — breakthroughs, conflicts, realizations.
                 Your AI coach will reference these in your sessions.
               </p>
               <button
                 type="button"
                 onClick={() => setShowForm(true)}
-                className="rounded-xl bg-gradient-to-r from-[#4a7c6b] to-[#2d4e43] px-6 py-3 text-white text-sm font-medium hover:shadow-md transition-all"
+                className="rounded-xl bg-gradient-to-r from-[#8d4837] to-[#6d2e20] px-6 py-3 text-white text-sm font-medium hover:shadow-md transition-all"
               >
                 Write your first entry
               </button>
@@ -295,11 +295,11 @@ export default function JournalPage() {
                 return (
                   <div
                     key={entry.id}
-                    className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-5 shadow-sm group"
+                    className="bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-2xl p-5 shadow-sm group"
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-[#8a7a66]">
+                        <span className="text-xs text-[#7a766f]">
                           {formatDate(entry.created_at)}
                         </span>
                         {moodInfo && (
@@ -312,21 +312,21 @@ export default function JournalPage() {
                         <button
                           type="button"
                           onClick={() => startEdit(entry)}
-                          className="p-1.5 rounded-lg text-[#8a7a66] hover:text-[#4a7c6b] hover:bg-[#4a7c6b]/5 transition-all"
+                          className="p-1.5 rounded-lg text-[#7a766f] hover:text-[#8d4837] hover:bg-[#8d4837]/5 transition-all"
                         >
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                         </button>
                         <button
                           type="button"
                           onClick={() => handleDelete(entry.id)}
-                          className="p-1.5 rounded-lg text-[#8a7a66] hover:text-[#c45c5c] hover:bg-[#c45c5c]/5 transition-all"
+                          className="p-1.5 rounded-lg text-[#7a766f] hover:text-[#b41340] hover:bg-[#b41340]/5 transition-all"
                         >
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                         </button>
                       </div>
                     </div>
 
-                    <p className="text-sm text-[#2d2418] leading-relaxed whitespace-pre-wrap">
+                    <p className="text-sm text-[#312e29] leading-relaxed whitespace-pre-wrap">
                       {entry.content}
                     </p>
 
@@ -335,7 +335,7 @@ export default function JournalPage() {
                         {entry.tags.map((tag) => (
                           <span
                             key={tag}
-                            className="text-[10px] tracking-wider uppercase font-medium text-[#4a7c6b] bg-[#d4e6df] px-2 py-0.5 rounded-full"
+                            className="text-[10px] tracking-wider uppercase font-medium text-[#8d4837] bg-[#fce4dc] px-2 py-0.5 rounded-full"
                           >
                             {tag}
                           </span>
@@ -350,8 +350,8 @@ export default function JournalPage() {
         </div>
       </div>
 
-      <footer className="px-6 py-6 text-center border-t border-[#e8e4df]/60">
-        <p className="text-[10px] text-[#c4bbaf] tracking-wide">
+      <footer className="px-6 py-6 text-center border-t border-[#e2dcd1]/60">
+        <p className="text-[10px] text-[#b1ada5] tracking-wide">
           Your journal entries are private and encrypted.
         </p>
       </footer>

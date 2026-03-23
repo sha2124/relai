@@ -256,7 +256,7 @@ export function Chat() {
   if (loadingHistory) {
     return (
       <div className="min-h-[100dvh] bg-gradient-warm flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-[#4a7c6b] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[#8d4837] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -264,11 +264,11 @@ export function Chat() {
   return (
     <div className="flex flex-col h-[100dvh] bg-gradient-warm">
       {/* Header */}
-      <header className="shrink-0 bg-white/60 backdrop-blur-md border-b border-[#e8e4df]/60 px-6 py-3.5">
+      <header className="shrink-0 bg-white/60 backdrop-blur-md border-b border-[#e2dcd1]/60 px-6 py-3.5">
         <div className="max-w-2xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="relative">
-              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#4a7c6b] to-[#2d4e43] flex items-center justify-center shadow-sm">
+              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-[#8d4837] to-[#6d2e20] flex items-center justify-center shadow-sm">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="text-white">
                   <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
@@ -276,15 +276,15 @@ export function Chat() {
               <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-[#68b89e] border-2 border-white" />
             </div>
             <div>
-              <h1 className="text-[15px] font-semibold text-[#1a1008] tracking-tight">RelAI</h1>
-              <p className="text-[11px] text-[#8a7a66]">Your relationship coach</p>
+              <h1 className="text-[15px] font-semibold text-[#312e29] tracking-tight">RelAI</h1>
+              <p className="text-[11px] text-[#7a766f]">Your relationship coach</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => setShowCrisis(true)}
-              className="text-xs text-[#c45c5c]/70 hover:text-[#c45c5c] transition-colors"
+              className="text-xs text-[#b41340]/70 hover:text-[#b41340] transition-colors"
             >
               I need help now
             </button>
@@ -292,12 +292,12 @@ export function Chat() {
               <button
                 type="button"
                 onClick={() => setShowNav(!showNav)}
-                className="p-1.5 rounded-lg text-[#8a7a66] hover:text-[#1a1008] hover:bg-[#f0ece4] transition-all"
+                className="p-1.5 rounded-lg text-[#7a766f] hover:text-[#312e29] hover:bg-[#ede7dd] transition-all"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
               </button>
               {showNav && (
-                <div className="absolute right-0 top-full mt-2 w-48 bg-white/95 backdrop-blur-md border border-[#e8e4df] rounded-xl shadow-lg overflow-hidden z-50 msg-enter">
+                <div className="absolute right-0 top-full mt-2 w-48 bg-white/95 backdrop-blur-md border border-[#e2dcd1] rounded-xl shadow-lg overflow-hidden z-50 msg-enter">
                   {[
                     { href: "/profile", label: "My Profile", icon: "👤" },
                     { href: "/dashboard", label: "Progress", icon: "📊" },
@@ -310,17 +310,17 @@ export function Chat() {
                       key={item.href}
                       type="button"
                       onClick={() => { setShowNav(false); router.push(item.href); }}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-sm text-[#2d2418] hover:bg-[#f5f2ee] transition-colors text-left"
+                      className="w-full flex items-center gap-3 px-4 py-3 text-sm text-[#312e29] hover:bg-[#f6f0e6] transition-colors text-left"
                     >
                       <span>{item.icon}</span>
                       <span>{item.label}</span>
                     </button>
                   ))}
-                  <div className="border-t border-[#e8e4df]">
+                  <div className="border-t border-[#e2dcd1]">
                     <button
                       type="button"
                       onClick={() => { setShowNav(false); handleSignOut(); }}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-sm text-[#8a7a66] hover:bg-[#f5f2ee] transition-colors text-left"
+                      className="w-full flex items-center gap-3 px-4 py-3 text-sm text-[#7a766f] hover:bg-[#f6f0e6] transition-colors text-left"
                     >
                       <span>👋</span>
                       <span>Sign out</span>
@@ -342,11 +342,11 @@ export function Chat() {
           ))}
           {isStreaming && messages[messages.length - 1]?.content === "" && (
             <div className="flex justify-start mb-4 msg-enter">
-              <div className="bg-white/80 backdrop-blur-sm border border-[#e8e4df] rounded-2xl rounded-bl-sm px-5 py-3.5 shadow-sm">
+              <div className="bg-white/80 backdrop-blur-sm border border-[#e2dcd1] rounded-2xl rounded-bl-sm px-5 py-3.5 shadow-sm">
                 <div className="flex gap-1.5">
-                  <span className="w-2 h-2 bg-[#4a7c6b] rounded-full typing-dot" />
-                  <span className="w-2 h-2 bg-[#4a7c6b] rounded-full typing-dot" />
-                  <span className="w-2 h-2 bg-[#4a7c6b] rounded-full typing-dot" />
+                  <span className="w-2 h-2 bg-[#8d4837] rounded-full typing-dot" />
+                  <span className="w-2 h-2 bg-[#8d4837] rounded-full typing-dot" />
+                  <span className="w-2 h-2 bg-[#8d4837] rounded-full typing-dot" />
                 </div>
               </div>
             </div>
@@ -355,10 +355,10 @@ export function Chat() {
       </div>
 
       {/* Input area */}
-      <div className="shrink-0 bg-white/60 backdrop-blur-md border-t border-[#e8e4df]/60 px-6 py-4">
+      <div className="shrink-0 bg-white/60 backdrop-blur-md border-t border-[#e2dcd1]/60 px-6 py-4">
         <div className="max-w-2xl mx-auto">
           <ChatInput onSend={handleSend} disabled={isStreaming} />
-          <p className="text-[10px] text-[#c4bbaf] text-center mt-2.5 tracking-wide">
+          <p className="text-[10px] text-[#b1ada5] text-center mt-2.5 tracking-wide">
             Not a replacement for professional therapy &middot; If in crisis, contact a mental health professional
           </p>
         </div>
@@ -376,48 +376,48 @@ export function Chat() {
             aria-label="Close crisis resources"
           />
           <div className="relative glass-card p-8 max-w-md w-full msg-enter">
-            <h2 className="font-heading text-xl font-semibold text-[#1a1008] mb-2">
+            <h2 className="font-heading text-xl font-semibold text-[#312e29] mb-2">
               You are not alone.
             </h2>
-            <p className="text-sm text-[#8a7a66] mb-6">
+            <p className="text-sm text-[#7a766f] mb-6">
               If you or someone you know is in danger, please reach out to these resources.
             </p>
 
             <div className="space-y-4">
-              <div className="rounded-xl bg-white/80 border border-[#e8e4df] p-4">
-                <p className="text-xs font-medium tracking-wide uppercase text-[#c45c5c] mb-1">
+              <div className="rounded-xl bg-white/80 border border-[#e2dcd1] p-4">
+                <p className="text-xs font-medium tracking-wide uppercase text-[#b41340] mb-1">
                   National Domestic Violence Hotline
                 </p>
-                <a href="tel:18007997233" className="text-base font-semibold text-[#1a1008] hover:text-[#4a7c6b] transition-colors">
+                <a href="tel:18007997233" className="text-base font-semibold text-[#312e29] hover:text-[#8d4837] transition-colors">
                   1-800-799-7233
                 </a>
               </div>
 
-              <div className="rounded-xl bg-white/80 border border-[#e8e4df] p-4">
-                <p className="text-xs font-medium tracking-wide uppercase text-[#c45c5c] mb-1">
+              <div className="rounded-xl bg-white/80 border border-[#e2dcd1] p-4">
+                <p className="text-xs font-medium tracking-wide uppercase text-[#b41340] mb-1">
                   Crisis Text Line
                 </p>
-                <p className="text-base font-semibold text-[#1a1008]">
-                  Text <span className="text-[#4a7c6b]">HOME</span> to <span className="text-[#4a7c6b]">741741</span>
+                <p className="text-base font-semibold text-[#312e29]">
+                  Text <span className="text-[#8d4837]">HOME</span> to <span className="text-[#8d4837]">741741</span>
                 </p>
               </div>
 
-              <div className="rounded-xl bg-white/80 border border-[#e8e4df] p-4">
-                <p className="text-xs font-medium tracking-wide uppercase text-[#c45c5c] mb-1">
+              <div className="rounded-xl bg-white/80 border border-[#e2dcd1] p-4">
+                <p className="text-xs font-medium tracking-wide uppercase text-[#b41340] mb-1">
                   988 Suicide & Crisis Lifeline
                 </p>
-                <a href="tel:988" className="text-base font-semibold text-[#1a1008] hover:text-[#4a7c6b] transition-colors">
-                  Call or text <span className="text-[#4a7c6b]">988</span>
+                <a href="tel:988" className="text-base font-semibold text-[#312e29] hover:text-[#8d4837] transition-colors">
+                  Call or text <span className="text-[#8d4837]">988</span>
                 </a>
               </div>
 
-              <div className="rounded-xl bg-white/80 border border-[#e8e4df] p-4">
-                <p className="text-xs font-medium tracking-wide uppercase text-[#8a7a66] mb-1">
+              <div className="rounded-xl bg-white/80 border border-[#e2dcd1] p-4">
+                <p className="text-xs font-medium tracking-wide uppercase text-[#7a766f] mb-1">
                   International
                 </p>
-                <p className="text-sm text-[#2d2418]">
+                <p className="text-sm text-[#312e29]">
                   Contact your local emergency services or visit{" "}
-                  <a href="https://findahelpline.com" target="_blank" rel="noopener noreferrer" className="text-[#4a7c6b] underline underline-offset-2">
+                  <a href="https://findahelpline.com" target="_blank" rel="noopener noreferrer" className="text-[#8d4837] underline underline-offset-2">
                     findahelpline.com
                   </a>
                 </p>
@@ -427,7 +427,7 @@ export function Chat() {
             <button
               type="button"
               onClick={() => setShowCrisis(false)}
-              className="mt-6 w-full rounded-xl border border-[#e8e4df] bg-white/50 px-5 py-3 text-sm text-[#8a7a66] hover:text-[#1a1008] hover:bg-white transition-all"
+              className="mt-6 w-full rounded-xl border border-[#e2dcd1] bg-white/50 px-5 py-3 text-sm text-[#7a766f] hover:text-[#312e29] hover:bg-white transition-all"
             >
               Close
             </button>
@@ -466,7 +466,7 @@ function EmptyState({ onSelect, name }: { onSelect: (msg: string) => void; name:
     <div className="flex flex-col items-center justify-center py-16 sm:py-24 text-center">
       {/* Logo */}
       <div className="relative mb-8">
-        <div className="h-20 w-20 rounded-full bg-gradient-to-br from-[#4a7c6b] to-[#2d4e43] flex items-center justify-center avatar-glow">
+        <div className="h-20 w-20 rounded-full bg-gradient-to-br from-[#8d4837] to-[#6d2e20] flex items-center justify-center avatar-glow">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="text-white">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
@@ -474,10 +474,10 @@ function EmptyState({ onSelect, name }: { onSelect: (msg: string) => void; name:
       </div>
 
       {/* Welcome text */}
-      <h2 className="text-2xl sm:text-3xl font-semibold text-[#1a1008] mb-3 tracking-tight">
+      <h2 className="text-2xl sm:text-3xl font-semibold text-[#312e29] mb-3 tracking-tight">
         {name ? `Hey ${name}, I\u2019m RelAI.` : "Hey, I\u2019m RelAI."}
       </h2>
-      <p className="text-[#8a7a66] max-w-md leading-relaxed mb-10 text-[15px]">
+      <p className="text-[#7a766f] max-w-md leading-relaxed mb-10 text-[15px]">
         {name
           ? "I\u2019ve read your profile. I know your patterns, your style, what you need. Let\u2019s talk about what\u2019s on your mind."
           : "I\u2019m here to help you understand your relationship patterns, navigate tough conversations, and build stronger connections."}
@@ -490,10 +490,10 @@ function EmptyState({ onSelect, name }: { onSelect: (msg: string) => void; name:
             key={label}
             type="button"
             onClick={() => onSelect(prompt)}
-            className="starter-prompt flex items-center gap-3 text-left bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-xl px-4 py-3.5 hover:bg-white hover:border-[#d4cfc7] group"
+            className="starter-prompt flex items-center gap-3 text-left bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-xl px-4 py-3.5 hover:bg-white hover:border-[#b1ada5] group"
           >
             <span className="text-lg shrink-0">{emoji}</span>
-            <span className="text-sm text-[#4a3d2e] font-medium group-hover:text-[#1a1008] transition-colors">
+            <span className="text-sm text-[#312e29] font-medium group-hover:text-[#312e29] transition-colors">
               {label}
             </span>
           </button>

@@ -27,7 +27,7 @@ const ARCHETYPES: Record<string, Archetype> = {
     strengths: ["Emotional stability", "Honest communication", "Natural conflict resolver"],
     blindSpots: ["May dismiss others' anxiety as overreaction", "Can neglect your own needs while steadying everyone else"],
     growthEdge: "Let yourself be the one who needs support sometimes. Vulnerability isn't weakness — it's an invitation.",
-    color: "#4a7c6b",
+    color: "#8d4837",
     emoji: "🕯️",
   },
   "secure+comm-expressive+conflict-repair": {
@@ -95,7 +95,7 @@ const ARCHETYPES: Record<string, Archetype> = {
     strengths: ["Emotional generosity", "Intuitive understanding of others", "Creates deep intimacy quickly"],
     blindSpots: ["Over-gives to earn love", "Avoids conflict to keep connection", "Can lose your identity in relationships"],
     growthEdge: "You are enough without the grand gestures. Practice receiving without immediately giving back.",
-    color: "#c4849c",
+    color: "#81502b",
     emoji: "🌸",
   },
 
@@ -159,7 +159,7 @@ const ATTACHMENT_FALLBACKS: Record<string, Archetype> = {
     strengths: ["Emotional availability", "Healthy boundaries", "Consistent presence"],
     blindSpots: ["May underestimate how hard relationships are for others", "Can become complacent in 'good enough'"],
     growthEdge: "Keep growing even when things feel stable. Comfort zones can become ruts.",
-    color: "#4a7c6b",
+    color: "#8d4837",
     emoji: "⚓",
   },
   anxious: {
@@ -170,7 +170,7 @@ const ATTACHMENT_FALLBACKS: Record<string, Archetype> = {
     strengths: ["Emotional attunement", "Deep capacity for intimacy", "Willingness to work on the relationship"],
     blindSpots: ["Can interpret distance as rejection", "Reassurance-seeking can push partners away", "Difficulty self-soothing"],
     growthEdge: "Build your own emotional home base. The most attractive version of you is the one who wants connection but doesn't need it to feel whole.",
-    color: "#c4849c",
+    color: "#81502b",
     emoji: "🔍",
   },
   avoidant: {

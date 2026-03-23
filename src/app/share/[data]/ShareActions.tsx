@@ -41,7 +41,7 @@ export default function ShareActions() {
       <button
         type="button"
         onClick={handleCopyLink}
-        className="flex-1 rounded-xl border border-[#e8e4df] bg-white/70 backdrop-blur-sm px-4 py-3 text-sm font-medium text-[#4a7c6b] hover:bg-white hover:border-[#d4cfc7] transition-all flex items-center justify-center gap-2"
+        className="flex-1 rounded-xl border border-[#e2dcd1] bg-white/70 backdrop-blur-sm px-4 py-3 text-sm font-medium text-[#8d4837] hover:bg-white hover:border-[#b1ada5] transition-all flex items-center justify-center gap-2"
       >
         {copied ? (
           <>
@@ -64,7 +64,7 @@ export default function ShareActions() {
         <button
           type="button"
           onClick={handleNativeShare}
-          className="rounded-xl border border-[#e8e4df] bg-white/70 backdrop-blur-sm px-4 py-3 text-sm font-medium text-[#4a7c6b] hover:bg-white hover:border-[#d4cfc7] transition-all flex items-center justify-center gap-2"
+          className="rounded-xl border border-[#e2dcd1] bg-white/70 backdrop-blur-sm px-4 py-3 text-sm font-medium text-[#8d4837] hover:bg-white hover:border-[#b1ada5] transition-all flex items-center justify-center gap-2"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="18" cy="5" r="3" />

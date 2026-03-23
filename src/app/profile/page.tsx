@@ -80,7 +80,7 @@ export default function ProfilePage() {
   if (!profile) {
     return (
       <div className="min-h-[100dvh] bg-gradient-warm flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-[#4a7c6b] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[#8d4837] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -107,15 +107,15 @@ export default function ProfilePage() {
             Your relationship archetype
           </p>
 
-          <h1 className="font-heading text-4xl sm:text-5xl font-semibold text-[#1a1008] mb-3 tracking-tight">
+          <h1 className="font-heading text-4xl sm:text-5xl font-semibold text-[#312e29] mb-3 tracking-tight">
             {archetype.name}
           </h1>
 
-          <p className="text-lg text-[#8a7a66] italic mb-6">
+          <p className="text-lg text-[#7a766f] italic mb-6">
             &ldquo;{archetype.tagline}&rdquo;
           </p>
 
-          <p className="text-[#6b5b47] text-base leading-relaxed max-w-md mx-auto mb-6">
+          <p className="text-[#5e5b54] text-base leading-relaxed max-w-md mx-auto mb-6">
             {archetype.description}
           </p>
 
@@ -143,7 +143,7 @@ export default function ProfilePage() {
                 setTimeout(() => setShareCopied(false), 2000);
               } catch { /* ignore */ }
             }}
-            className="inline-flex items-center gap-2 rounded-full border border-[#e8e4df] bg-white/60 backdrop-blur-sm px-5 py-2.5 text-sm font-medium text-[#4a7c6b] hover:bg-white hover:border-[#d4cfc7] transition-all"
+            className="inline-flex items-center gap-2 rounded-full border border-[#e2dcd1] bg-white/60 backdrop-blur-sm px-5 py-2.5 text-sm font-medium text-[#8d4837] hover:bg-white hover:border-[#b1ada5] transition-all"
           >
             {shareCopied ? (
               <>
@@ -164,14 +164,14 @@ export default function ProfilePage() {
       <div className="px-6 pb-6">
         <div className="max-w-lg mx-auto grid grid-cols-2 gap-4 stagger-in">
           {/* Strengths */}
-          <div className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-5 shadow-sm">
-            <p className="text-xs font-medium tracking-wide uppercase text-[#4a7c6b] mb-3">
+          <div className="bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-2xl p-5 shadow-sm">
+            <p className="text-xs font-medium tracking-wide uppercase text-[#8d4837] mb-3">
               Your strengths
             </p>
             <ul className="space-y-2">
               {archetype.strengths.map((s) => (
-                <li key={s} className="text-sm text-[#2d2418] flex items-start gap-2">
-                  <span className="text-[#4a7c6b] shrink-0 mt-0.5">+</span>
+                <li key={s} className="text-sm text-[#312e29] flex items-start gap-2">
+                  <span className="text-[#8d4837] shrink-0 mt-0.5">+</span>
                   {s}
                 </li>
               ))}
@@ -179,14 +179,14 @@ export default function ProfilePage() {
           </div>
 
           {/* Blind spots */}
-          <div className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-5 shadow-sm">
-            <p className="text-xs font-medium tracking-wide uppercase text-[#c45c5c] mb-3">
+          <div className="bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-2xl p-5 shadow-sm">
+            <p className="text-xs font-medium tracking-wide uppercase text-[#b41340] mb-3">
               Blind spots
             </p>
             <ul className="space-y-2">
               {archetype.blindSpots.map((b) => (
-                <li key={b} className="text-sm text-[#2d2418] flex items-start gap-2">
-                  <span className="text-[#c45c5c] shrink-0 mt-0.5">!</span>
+                <li key={b} className="text-sm text-[#312e29] flex items-start gap-2">
+                  <span className="text-[#b41340] shrink-0 mt-0.5">!</span>
                   {b}
                 </li>
               ))}
@@ -208,7 +208,7 @@ export default function ProfilePage() {
             <p className="text-xs font-medium tracking-wide uppercase mb-3" style={{ color: archetype.color }}>
               Your growth edge
             </p>
-            <p className="text-[#2d2418] text-base leading-relaxed italic">
+            <p className="text-[#312e29] text-base leading-relaxed italic">
               &ldquo;{archetype.growthEdge}&rdquo;
             </p>
           </div>
@@ -221,7 +221,7 @@ export default function ProfilePage() {
           <button
             type="button"
             onClick={() => setShowDetails(!showDetails)}
-            className="w-full text-center text-sm text-[#4a7c6b] font-medium py-3 hover:text-[#2d4e43] transition-colors flex items-center justify-center gap-2"
+            className="w-full text-center text-sm text-[#8d4837] font-medium py-3 hover:text-[#6d2e20] transition-colors flex items-center justify-center gap-2"
           >
             {showDetails ? "Hide" : "See"} your full trait breakdown
             <svg
@@ -241,7 +241,7 @@ export default function ProfilePage() {
                 label="Attachment Style"
                 title={profile.attachmentStyle.label}
                 description={profile.attachmentStyle.description}
-                color="#4a7c6b"
+                color="#8d4837"
               />
               <ProfileCard
                 label="Communication Style"
@@ -253,41 +253,41 @@ export default function ProfilePage() {
                 label="Conflict Response"
                 title={profile.conflictResponse.label}
                 description={profile.conflictResponse.description}
-                color="#8a7a66"
+                color="#7a766f"
               />
 
               {/* Love Language */}
-              <div className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-6 shadow-sm">
-                <p className="text-xs font-medium tracking-wide uppercase text-[#c45c5c] mb-4">
+              <div className="bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-2xl p-6 shadow-sm">
+                <p className="text-xs font-medium tracking-wide uppercase text-[#b41340] mb-4">
                   Love Language
                 </p>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-[11px] uppercase tracking-wider text-[#8a7a66] mb-1">You need</p>
-                    <p className="text-base font-semibold text-[#1a1008]">
+                    <p className="text-[11px] uppercase tracking-wider text-[#7a766f] mb-1">You need</p>
+                    <p className="text-base font-semibold text-[#312e29]">
                       {profile.loveLanguage.receivingLabel}
                     </p>
                   </div>
                   <div>
-                    <p className="text-[11px] uppercase tracking-wider text-[#8a7a66] mb-1">You give</p>
-                    <p className="text-base font-semibold text-[#1a1008]">
+                    <p className="text-[11px] uppercase tracking-wider text-[#7a766f] mb-1">You give</p>
+                    <p className="text-base font-semibold text-[#312e29]">
                       {profile.loveLanguage.givingLabel}
                     </p>
                   </div>
                 </div>
                 {profile.loveLanguage.receiving !== profile.loveLanguage.giving && (
-                  <p className="text-sm text-[#8a7a66] mt-4 leading-relaxed">
+                  <p className="text-sm text-[#7a766f] mt-4 leading-relaxed">
                     You give love differently from how you need to receive it. This gap is common — and worth being aware of.
                   </p>
                 )}
               </div>
 
               {/* Goal */}
-              <div className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-6 shadow-sm">
+              <div className="bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-2xl p-6 shadow-sm">
                 <p className="text-xs font-medium tracking-wide uppercase text-[#3a6355] mb-2">
                   Your Focus
                 </p>
-                <p className="text-base font-semibold text-[#1a1008]">
+                <p className="text-base font-semibold text-[#312e29]">
                   {profile.goalLabel}
                 </p>
               </div>
@@ -303,7 +303,7 @@ export default function ProfilePage() {
             <button
               type="button"
               onClick={() => router.push("/")}
-              className="w-full rounded-xl bg-gradient-to-r from-[#4a7c6b] to-[#2d4e43] px-5 py-4 text-white font-semibold text-base hover:shadow-md transition-all"
+              className="w-full rounded-xl bg-gradient-to-r from-[#8d4837] to-[#6d2e20] px-5 py-4 text-white font-semibold text-base hover:shadow-md transition-all"
             >
               Start chatting with your coach
             </button>
@@ -311,7 +311,7 @@ export default function ProfilePage() {
             <button
               type="button"
               onClick={() => router.push("/auth?next=/profile")}
-              className="w-full rounded-xl bg-gradient-to-r from-[#4a7c6b] to-[#2d4e43] px-5 py-4 text-white font-semibold text-base hover:shadow-md transition-all"
+              className="w-full rounded-xl bg-gradient-to-r from-[#8d4837] to-[#6d2e20] px-5 py-4 text-white font-semibold text-base hover:shadow-md transition-all"
             >
               Create free account to save & chat
             </button>
@@ -320,7 +320,7 @@ export default function ProfilePage() {
           <button
             type="button"
             onClick={() => router.push("/partner")}
-            className="w-full rounded-xl border border-[#c4849c]/30 bg-[#c4849c]/5 px-5 py-3.5 text-sm font-medium text-[#c4849c] hover:bg-[#c4849c]/10 hover:border-[#c4849c]/50 transition-all flex items-center justify-center gap-2"
+            className="w-full rounded-xl border border-[#81502b]/30 bg-[#81502b]/5 px-5 py-3.5 text-sm font-medium text-[#81502b] hover:bg-[#81502b]/10 hover:border-[#81502b]/50 transition-all flex items-center justify-center gap-2"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
             Invite your partner
@@ -333,7 +333,7 @@ export default function ProfilePage() {
               localStorage.removeItem("relai-profile");
               router.push("/quiz");
             }}
-            className="w-full rounded-xl border border-[#e8e4df] bg-white/50 px-5 py-3 text-sm text-[#8a7a66] hover:text-[#1a1008] hover:bg-white transition-all"
+            className="w-full rounded-xl border border-[#e2dcd1] bg-white/50 px-5 py-3 text-sm text-[#7a766f] hover:text-[#312e29] hover:bg-white transition-all"
           >
             Retake quiz
           </button>
@@ -341,8 +341,8 @@ export default function ProfilePage() {
       </div>
 
       {/* ── Footer disclaimer ── */}
-      <footer className="px-6 py-6 text-center border-t border-[#e8e4df]/60">
-        <p className="text-[10px] text-[#c4bbaf] tracking-wide">
+      <footer className="px-6 py-6 text-center border-t border-[#e2dcd1]/60">
+        <p className="text-[10px] text-[#b1ada5] tracking-wide">
           RelAI is a relationship coaching tool, not a replacement for licensed therapy.
         </p>
       </footer>
@@ -362,12 +362,12 @@ function ProfileCard({
   color: string;
 }) {
   return (
-    <div className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-6 shadow-sm">
+    <div className="bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-2xl p-6 shadow-sm">
       <p className="text-xs font-medium tracking-wide uppercase mb-3" style={{ color }}>
         {label}
       </p>
-      <h3 className="text-lg font-semibold text-[#1a1008] mb-2">{title}</h3>
-      <p className="text-sm text-[#6b5b47] leading-relaxed">{description}</p>
+      <h3 className="text-lg font-semibold text-[#312e29] mb-2">{title}</h3>
+      <p className="text-sm text-[#5e5b54] leading-relaxed">{description}</p>
     </div>
   );
 }

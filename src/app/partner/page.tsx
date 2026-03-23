@@ -93,13 +93,17 @@ export default function PartnerPage() {
 
       // Also check if I'm a partner in someone else's link
       if (!existingLink || existingLink.status === "pending") {
-        const { data: asPartner } = await supabase
+        const { data: asPartner, error: asPartnerError } = await supabase
           .from("partner_links")
           .select("*, user_id")
           .eq("partner_id", user.id)
           .eq("status", "linked")
           .limit(1)
           .single();
+
+        if (asPartnerError) {
+          console.warn("[partner] asPartner query failed (likely RLS):", asPartnerError.message);
+        }
 
         if (asPartner) {
           // Mark as linked so the UI shows the linked state
@@ -173,7 +177,7 @@ export default function PartnerPage() {
   if (loading) {
     return (
       <div className="min-h-[100dvh] bg-gradient-warm flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-[#4a7c6b] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[#8d4837] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -188,16 +192,16 @@ export default function PartnerPage() {
           <button
             type="button"
             onClick={() => router.push("/profile")}
-            className="text-sm text-[#8a7a66] hover:text-[#4a7c6b] transition-colors mb-8 flex items-center gap-1"
+            className="text-sm text-[#7a766f] hover:text-[#8d4837] transition-colors mb-8 flex items-center gap-1"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
             Back to profile
           </button>
 
-          <h1 className="font-heading text-3xl sm:text-4xl font-semibold text-[#1a1008] mb-3 tracking-tight">
+          <h1 className="font-heading text-3xl sm:text-4xl font-semibold text-[#312e29] mb-3 tracking-tight">
             {isLinked ? "You & Your Partner" : "Partner Linking"}
           </h1>
-          <p className="text-[#8a7a66] text-base leading-relaxed mb-8">
+          <p className="text-[#7a766f] text-base leading-relaxed mb-8">
             {isLinked
               ? "See how your archetypes complement each other."
               : "Send an invite link to your partner. They can sign in with an existing account or create a new one."}
@@ -209,7 +213,7 @@ export default function PartnerPage() {
               {/* Side by side archetypes */}
               <div className="grid grid-cols-2 gap-4">
                 <div
-                  className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-5 shadow-sm text-center"
+                  className="bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-2xl p-5 shadow-sm text-center"
                 >
                   <div
                     className="h-16 w-16 rounded-full flex items-center justify-center mx-auto mb-3"
@@ -220,15 +224,15 @@ export default function PartnerPage() {
                   >
                     <span className="text-2xl">{myArchetype.emoji}</span>
                   </div>
-                  <p className="text-[10px] uppercase tracking-wider text-[#8a7a66] mb-1">You</p>
-                  <p className="font-heading text-base font-semibold text-[#1a1008]">
+                  <p className="text-[10px] uppercase tracking-wider text-[#7a766f] mb-1">You</p>
+                  <p className="font-heading text-base font-semibold text-[#312e29]">
                     {myArchetype.name}
                   </p>
-                  <p className="text-xs text-[#8a7a66] italic mt-1">{myArchetype.tagline}</p>
+                  <p className="text-xs text-[#7a766f] italic mt-1">{myArchetype.tagline}</p>
                 </div>
 
                 <div
-                  className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-5 shadow-sm text-center"
+                  className="bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-2xl p-5 shadow-sm text-center"
                 >
                   <div
                     className="h-16 w-16 rounded-full flex items-center justify-center mx-auto mb-3"
@@ -239,13 +243,13 @@ export default function PartnerPage() {
                   >
                     <span className="text-2xl">{partnerArchetype.emoji}</span>
                   </div>
-                  <p className="text-[10px] uppercase tracking-wider text-[#8a7a66] mb-1">
+                  <p className="text-[10px] uppercase tracking-wider text-[#7a766f] mb-1">
                     {partnerName ?? "Partner"}
                   </p>
-                  <p className="font-heading text-base font-semibold text-[#1a1008]">
+                  <p className="font-heading text-base font-semibold text-[#312e29]">
                     {partnerArchetype.name}
                   </p>
-                  <p className="text-xs text-[#8a7a66] italic mt-1">{partnerArchetype.tagline}</p>
+                  <p className="text-xs text-[#7a766f] italic mt-1">{partnerArchetype.tagline}</p>
                 </div>
               </div>
 
@@ -257,10 +261,10 @@ export default function PartnerPage() {
                   border: `1px solid ${myArchetype.color}20`,
                 }}
               >
-                <p className="text-xs font-medium tracking-wide uppercase text-[#4a7c6b] mb-3">
+                <p className="text-xs font-medium tracking-wide uppercase text-[#8d4837] mb-3">
                   Compatibility Insight
                 </p>
-                <p className="text-[#2d2418] text-sm leading-relaxed">
+                <p className="text-[#312e29] text-sm leading-relaxed">
                   As a <strong>{myArchetype.name}</strong> paired with a <strong>{partnerArchetype.name}</strong>, your
                   relationship has a unique dynamic. Your strengths
                   ({myArchetype.strengths[0].toLowerCase()}) complement
@@ -274,27 +278,27 @@ export default function PartnerPage() {
 
               {/* Partner's strengths & blind spots */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-5 shadow-sm">
-                  <p className="text-xs font-medium tracking-wide uppercase text-[#4a7c6b] mb-3">
+                <div className="bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-2xl p-5 shadow-sm">
+                  <p className="text-xs font-medium tracking-wide uppercase text-[#8d4837] mb-3">
                     {partnerName ? `${partnerName}'s` : "Their"} strengths
                   </p>
                   <ul className="space-y-2">
                     {partnerArchetype.strengths.map((s) => (
-                      <li key={s} className="text-sm text-[#2d2418] flex items-start gap-2">
-                        <span className="text-[#4a7c6b] shrink-0 mt-0.5">+</span>
+                      <li key={s} className="text-sm text-[#312e29] flex items-start gap-2">
+                        <span className="text-[#8d4837] shrink-0 mt-0.5">+</span>
                         {s}
                       </li>
                     ))}
                   </ul>
                 </div>
-                <div className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-5 shadow-sm">
-                  <p className="text-xs font-medium tracking-wide uppercase text-[#c45c5c] mb-3">
+                <div className="bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-2xl p-5 shadow-sm">
+                  <p className="text-xs font-medium tracking-wide uppercase text-[#b41340] mb-3">
                     {partnerName ? `${partnerName}'s` : "Their"} blind spots
                   </p>
                   <ul className="space-y-2">
                     {partnerArchetype.blindSpots.map((b) => (
-                      <li key={b} className="text-sm text-[#2d2418] flex items-start gap-2">
-                        <span className="text-[#c45c5c] shrink-0 mt-0.5">!</span>
+                      <li key={b} className="text-sm text-[#312e29] flex items-start gap-2">
+                        <span className="text-[#b41340] shrink-0 mt-0.5">!</span>
                         {b}
                       </li>
                     ))}
@@ -313,7 +317,7 @@ export default function PartnerPage() {
                 <p className="text-xs font-medium tracking-wide uppercase mb-2" style={{ color: partnerArchetype.color }}>
                   {partnerName ? `${partnerName}'s` : "Their"} growth edge
                 </p>
-                <p className="text-sm text-[#2d2418] leading-relaxed italic">
+                <p className="text-sm text-[#312e29] leading-relaxed italic">
                   &ldquo;{partnerArchetype.growthEdge}&rdquo;
                 </p>
               </div>
@@ -321,7 +325,7 @@ export default function PartnerPage() {
               <button
                 type="button"
                 onClick={() => router.push("/")}
-                className="w-full rounded-xl bg-gradient-to-r from-[#4a7c6b] to-[#2d4e43] px-5 py-4 text-white font-semibold text-base hover:shadow-md transition-all"
+                className="w-full rounded-xl bg-gradient-to-r from-[#8d4837] to-[#6d2e20] px-5 py-4 text-white font-semibold text-base hover:shadow-md transition-all"
               >
                 Start a coaching session together
               </button>
@@ -331,16 +335,16 @@ export default function PartnerPage() {
             <div className="space-y-6">
               {!link ? (
                 <div className="text-center">
-                  <div className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-8 shadow-sm mb-6">
-                    <div className="h-20 w-20 rounded-full bg-[#c4849c]/10 border-2 border-[#c4849c]/20 flex items-center justify-center mx-auto mb-5">
-                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#c4849c" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <div className="bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-2xl p-8 shadow-sm mb-6">
+                    <div className="h-20 w-20 rounded-full bg-[#81502b]/10 border-2 border-[#81502b]/20 flex items-center justify-center mx-auto mb-5">
+                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#81502b" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
                         <circle cx="9" cy="7" r="4"/>
                         <line x1="19" y1="8" x2="19" y2="14"/>
                         <line x1="22" y1="11" x2="16" y2="11"/>
                       </svg>
                     </div>
-                    <p className="text-[#2d2418] text-base leading-relaxed mb-2">
+                    <p className="text-[#312e29] text-base leading-relaxed mb-2">
                       Generate an invite link to share with your partner.
                       When they take the quiz, you will both see how your archetypes interact.
                     </p>
@@ -350,39 +354,39 @@ export default function PartnerPage() {
                     type="button"
                     onClick={generateInvite}
                     disabled={generating}
-                    className="w-full rounded-xl bg-gradient-to-r from-[#c4849c] to-[#a06b7f] px-5 py-4 text-white font-semibold text-base hover:shadow-md transition-all disabled:opacity-60"
+                    className="w-full rounded-xl bg-gradient-to-r from-[#81502b] to-[#6e401c] px-5 py-4 text-white font-semibold text-base hover:shadow-md transition-all disabled:opacity-60"
                   >
                     {generating ? "Generating..." : "Generate invite link"}
                   </button>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-6 shadow-sm">
-                    <p className="text-xs font-medium tracking-wide uppercase text-[#4a7c6b] mb-3">
+                  <div className="bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-2xl p-6 shadow-sm">
+                    <p className="text-xs font-medium tracking-wide uppercase text-[#8d4837] mb-3">
                       Your invite link
                     </p>
                     <div className="flex items-center gap-2">
                       <input
                         readOnly
                         value={`${typeof window !== "undefined" ? window.location.origin : ""}/partner/join/${link.invite_code}`}
-                        className="flex-1 bg-[#f5f2ee] border border-[#e8e4df] rounded-lg px-3 py-2.5 text-sm text-[#2d2418] truncate"
+                        className="flex-1 bg-[#f6f0e6] border border-[#e2dcd1] rounded-lg px-3 py-2.5 text-sm text-[#312e29] truncate"
                       />
                       <button
                         type="button"
                         onClick={copyLink}
-                        className="shrink-0 rounded-lg border border-[#e8e4df] bg-white px-4 py-2.5 text-sm font-medium text-[#4a7c6b] hover:bg-[#f5f2ee] transition-all"
+                        className="shrink-0 rounded-lg border border-[#e2dcd1] bg-white px-4 py-2.5 text-sm font-medium text-[#8d4837] hover:bg-[#f6f0e6] transition-all"
                       >
                         {copied ? "Copied!" : "Copy"}
                       </button>
                     </div>
-                    <p className="text-xs text-[#8a7a66] mt-3">
+                    <p className="text-xs text-[#7a766f] mt-3">
                       Share this link with your partner. They can sign in with an existing account or create a new one. If they haven&apos;t taken the quiz yet, they&apos;ll be guided through it first.
                     </p>
                   </div>
 
-                  <div className="bg-[#c4849c]/5 border border-[#c4849c]/15 rounded-2xl p-5">
-                    <p className="text-sm text-[#8a7a66] flex items-center gap-2">
-                      <span className="inline-block w-2 h-2 rounded-full bg-[#c4849c]/40 animate-pulse" />
+                  <div className="bg-[#81502b]/5 border border-[#81502b]/15 rounded-2xl p-5">
+                    <p className="text-sm text-[#7a766f] flex items-center gap-2">
+                      <span className="inline-block w-2 h-2 rounded-full bg-[#81502b]/40 animate-pulse" />
                       Waiting for your partner to join...
                     </p>
                   </div>
@@ -393,8 +397,8 @@ export default function PartnerPage() {
         </div>
       </div>
 
-      <footer className="px-6 py-6 text-center border-t border-[#e8e4df]/60">
-        <p className="text-[10px] text-[#c4bbaf] tracking-wide">
+      <footer className="px-6 py-6 text-center border-t border-[#e2dcd1]/60">
+        <p className="text-[10px] text-[#b1ada5] tracking-wide">
           RelAI is a relationship coaching tool, not a replacement for licensed therapy.
         </p>
       </footer>

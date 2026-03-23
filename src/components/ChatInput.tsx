@@ -45,12 +45,12 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
           placeholder="What's on your mind?"
           disabled={disabled}
           rows={1}
-          className="w-full resize-none rounded-2xl border border-[#e8e4df] bg-white px-4 py-3 pr-12 text-[15px] text-[#1a1008] placeholder:text-[#c4bbaf] focus:outline-none focus:ring-2 focus:ring-[#4a7c6b]/20 focus:border-[#4a7c6b]/40 disabled:opacity-50 transition-all shadow-sm"
+          className="w-full resize-none rounded-2xl border border-[#e2dcd1] bg-white px-4 py-3 pr-12 text-[15px] text-[#312e29] placeholder:text-[#b1ada5] focus:outline-none focus:ring-2 focus:ring-[#8d4837]/20 focus:border-[#8d4837]/40 disabled:opacity-50 transition-all shadow-sm"
         />
         <button
           type="submit"
           disabled={disabled || !input.trim()}
-          className="absolute right-2 bottom-2 h-8 w-8 rounded-xl bg-gradient-to-br from-[#4a7c6b] to-[#2d4e43] flex items-center justify-center text-white hover:shadow-md transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:shadow-none"
+          className="absolute right-2 bottom-2 h-8 w-8 rounded-xl bg-gradient-to-br from-[#8d4837] to-[#6d2e20] flex items-center justify-center text-white hover:shadow-md transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:shadow-none"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
             <path d="M22 2L11 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>

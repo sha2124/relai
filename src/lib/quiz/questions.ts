@@ -14,11 +14,11 @@ export interface QuizQuestion {
 }
 
 export const SECTIONS = [
-  { id: "intro", label: "About You", color: "#4a7c6b" },
+  { id: "intro", label: "About You", color: "#8d4837" },
   { id: "attachment", label: "How You Connect", color: "#6b8f82" },
   { id: "communication", label: "How You Communicate", color: "#7a9b90" },
   { id: "conflict", label: "How You Handle Conflict", color: "#8aa79e" },
-  { id: "love", label: "What You Need", color: "#4a7c6b" },
+  { id: "love", label: "What You Need", color: "#8d4837" },
   { id: "goals", label: "What Brought You Here", color: "#3a6355" },
 ];
 
