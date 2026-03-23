@@ -17,6 +17,7 @@ function AuthForm() {
   const searchParams = useSearchParams();
   const nextPath = searchParams.get("next") ?? "/";
   const mode = searchParams.get("mode");
+  const isPartnerInvite = nextPath.includes("/partner/join/");
   const [isLogin, setIsLogin] = useState(mode !== "signup");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -88,12 +89,16 @@ function AuthForm() {
             </svg>
           </div>
           <h1 className="font-heading text-2xl font-semibold text-[#1a1008] tracking-tight">
-            {isLogin ? "Welcome back" : "Save your results"}
+            {isPartnerInvite
+              ? "Join your partner"
+              : isLogin ? "Welcome back" : "Save your results"}
           </h1>
           <p className="text-sm text-[#8a7a66] mt-1">
-            {isLogin
-              ? "Sign in to continue your coaching"
-              : "Create a free account to unlock your AI coach"}
+            {isPartnerInvite
+              ? "Sign in or create a free account to link with your partner"
+              : isLogin
+                ? "Sign in to continue your coaching"
+                : "Create a free account to unlock your AI coach"}
           </p>
         </div>
 

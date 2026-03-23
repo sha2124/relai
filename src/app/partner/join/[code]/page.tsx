@@ -30,7 +30,7 @@ export default function PartnerJoinPage() {
       const { data: { user } } = await supabase.auth.getUser();
 
       if (!user) {
-        router.push(`/auth?mode=signup&next=/partner/join/${code}`);
+        router.push(`/auth?next=/partner/join/${code}`);
         return;
       }
 
