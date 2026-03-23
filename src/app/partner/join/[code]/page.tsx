@@ -48,7 +48,7 @@ export default function PartnerJoinPage() {
       }
 
       if (invite.user_id === user.id) {
-        setErrorMsg("You can't accept your own invite link.");
+        setErrorMsg("own-invite");
         setStatus("error");
         return;
       }
@@ -171,6 +171,16 @@ export default function PartnerJoinPage() {
   }
 
   if (status === "error") {
+    const isOwnInvite = errorMsg === "own-invite";
+
+    async function handleSignOutAndRetry() {
+      const supabase = createClient();
+      await supabase.auth.signOut();
+      localStorage.removeItem("relai-profile");
+      localStorage.removeItem("relai-quiz");
+      window.location.reload();
+    }
+
     return (
       <div className="min-h-[100dvh] bg-gradient-warm flex items-center justify-center px-6">
         <div className="max-w-lg mx-auto text-center stagger-in">
@@ -180,16 +190,31 @@ export default function PartnerJoinPage() {
             </svg>
           </div>
           <h1 className="font-heading text-2xl font-semibold text-[#1a1008] mb-3">
-            Something went wrong
+            {isOwnInvite ? "You\u2019re signed in as the inviter" : "Something went wrong"}
           </h1>
-          <p className="text-[#8a7a66] mb-6">{errorMsg}</p>
-          <button
-            type="button"
-            onClick={() => router.push("/partner")}
-            className="rounded-xl border border-[#e8e4df] bg-white/50 px-6 py-3 text-sm text-[#4a7c6b] font-medium hover:bg-white transition-all"
-          >
-            Go to partner page
-          </button>
+          <p className="text-[#8a7a66] mb-6">
+            {isOwnInvite
+              ? "You created this invite link. Sign out and sign in with your partner\u2019s account to accept it."
+              : errorMsg}
+          </p>
+          <div className="space-y-3">
+            {isOwnInvite && (
+              <button
+                type="button"
+                onClick={handleSignOutAndRetry}
+                className="w-full rounded-xl bg-gradient-to-r from-[#4a7c6b] to-[#2d4e43] px-6 py-3.5 text-white font-semibold text-sm hover:shadow-md transition-all"
+              >
+                Sign out &amp; continue as partner
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => router.push("/partner")}
+              className="w-full rounded-xl border border-[#e8e4df] bg-white/50 px-6 py-3 text-sm text-[#4a7c6b] font-medium hover:bg-white transition-all"
+            >
+              Go to partner page
+            </button>
+          </div>
         </div>
       </div>
     );
