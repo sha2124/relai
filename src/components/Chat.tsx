@@ -51,6 +51,7 @@ export function Chat() {
   const [userName, setUserName] = useState("");
   const [userId, setUserId] = useState<string | null>(null);
   const [loadingHistory, setLoadingHistory] = useState(true);
+  const [showCrisis, setShowCrisis] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Load profile and conversation history from Supabase
@@ -246,13 +247,22 @@ export function Chat() {
               <p className="text-[11px] text-[#8a7a66]">Your relationship coach</p>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={handleSignOut}
-            className="text-xs text-[#8a7a66] hover:text-[#1a1008] transition-colors"
-          >
-            Sign out
-          </button>
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={() => setShowCrisis(true)}
+              className="text-xs text-[#c45c5c]/70 hover:text-[#c45c5c] transition-colors"
+            >
+              I need help now
+            </button>
+            <button
+              type="button"
+              onClick={handleSignOut}
+              className="text-xs text-[#8a7a66] hover:text-[#1a1008] transition-colors"
+            >
+              Sign out
+            </button>
+          </div>
         </div>
       </header>
 
@@ -286,6 +296,77 @@ export function Chat() {
           </p>
         </div>
       </div>
+
+      {/* Crisis Resources Modal */}
+      {showCrisis && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setShowCrisis(false)}
+            onKeyDown={(e) => { if (e.key === "Escape") setShowCrisis(false); }}
+            role="button"
+            tabIndex={0}
+            aria-label="Close crisis resources"
+          />
+          <div className="relative glass-card p-8 max-w-md w-full msg-enter">
+            <h2 className="font-heading text-xl font-semibold text-[#1a1008] mb-2">
+              You are not alone.
+            </h2>
+            <p className="text-sm text-[#8a7a66] mb-6">
+              If you or someone you know is in danger, please reach out to these resources.
+            </p>
+
+            <div className="space-y-4">
+              <div className="rounded-xl bg-white/80 border border-[#e8e4df] p-4">
+                <p className="text-xs font-medium tracking-wide uppercase text-[#c45c5c] mb-1">
+                  National Domestic Violence Hotline
+                </p>
+                <a href="tel:18007997233" className="text-base font-semibold text-[#1a1008] hover:text-[#4a7c6b] transition-colors">
+                  1-800-799-7233
+                </a>
+              </div>
+
+              <div className="rounded-xl bg-white/80 border border-[#e8e4df] p-4">
+                <p className="text-xs font-medium tracking-wide uppercase text-[#c45c5c] mb-1">
+                  Crisis Text Line
+                </p>
+                <p className="text-base font-semibold text-[#1a1008]">
+                  Text <span className="text-[#4a7c6b]">HOME</span> to <span className="text-[#4a7c6b]">741741</span>
+                </p>
+              </div>
+
+              <div className="rounded-xl bg-white/80 border border-[#e8e4df] p-4">
+                <p className="text-xs font-medium tracking-wide uppercase text-[#c45c5c] mb-1">
+                  988 Suicide & Crisis Lifeline
+                </p>
+                <a href="tel:988" className="text-base font-semibold text-[#1a1008] hover:text-[#4a7c6b] transition-colors">
+                  Call or text <span className="text-[#4a7c6b]">988</span>
+                </a>
+              </div>
+
+              <div className="rounded-xl bg-white/80 border border-[#e8e4df] p-4">
+                <p className="text-xs font-medium tracking-wide uppercase text-[#8a7a66] mb-1">
+                  International
+                </p>
+                <p className="text-sm text-[#2d2418]">
+                  Contact your local emergency services or visit{" "}
+                  <a href="https://findahelpline.com" target="_blank" rel="noopener noreferrer" className="text-[#4a7c6b] underline underline-offset-2">
+                    findahelpline.com
+                  </a>
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowCrisis(false)}
+              className="mt-6 w-full rounded-xl border border-[#e8e4df] bg-white/50 px-5 py-3 text-sm text-[#8a7a66] hover:text-[#1a1008] hover:bg-white transition-all"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
