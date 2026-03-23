@@ -178,7 +178,8 @@ export default function PartnerJoinPage() {
       await supabase.auth.signOut();
       localStorage.removeItem("relai-profile");
       localStorage.removeItem("relai-quiz");
-      window.location.reload();
+      // Go directly to auth, then back to this join page
+      window.location.href = `/auth?next=/partner/join/${code}`;
     }
 
     return (
