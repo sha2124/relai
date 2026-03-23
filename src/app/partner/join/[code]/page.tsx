@@ -79,16 +79,19 @@ export default function PartnerJoinPage() {
 
       setStatus("linking");
 
-      // Link the partner
-      const { error: updateError } = await supabase
+      // Link the partner — use .select() to verify the update actually applied
+      const { data: updatedLink, error: updateError } = await supabase
         .from("partner_links")
         .update({
           partner_id: user.id,
           status: "linked",
         })
-        .eq("id", invite.id);
+        .eq("id", invite.id)
+        .select()
+        .single();
 
-      if (updateError) {
+      if (updateError || !updatedLink || updatedLink.status !== "linked") {
+        console.error("[partner-join] Update failed:", updateError);
         setErrorMsg("Something went wrong linking your accounts. Please try again.");
         setStatus("error");
         return;
