@@ -9,6 +9,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-inter);
+  --font-serif: var(--font-lora);
 }
 
 body {
@@ -67,4 +68,44 @@ body {
 .starter-prompt:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* Analyzing animation */
+@keyframes analyzing-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+@keyframes analyzing-bar {
+  0% { width: 0%; }
+  50% { width: 70%; }
+  85% { width: 92%; }
+  100% { width: 100%; }
+}
+.analyzing-pulse {
+  animation: analyzing-pulse 2s ease-in-out infinite;
+}
+.analyzing-bar {
+  animation: analyzing-bar 3s ease-out forwards;
+}
+
+/* Stagger children fade-in */
+@keyframes stagger-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.stagger-in > * {
+  opacity: 0;
+  animation: stagger-in 0.5s ease-out forwards;
+}
+.stagger-in > *:nth-child(1) { animation-delay: 0.1s; }
+.stagger-in > *:nth-child(2) { animation-delay: 0.2s; }
+.stagger-in > *:nth-child(3) { animation-delay: 0.35s; }
+.stagger-in > *:nth-child(4) { animation-delay: 0.5s; }
+.stagger-in > *:nth-child(5) { animation-delay: 0.65s; }
+.stagger-in > *:nth-child(6) { animation-delay: 0.8s; }
+.stagger-in > *:nth-child(7) { animation-delay: 0.95s; }
+
+/* Serif heading utility */
+.font-heading {
+  font-family: var(--font-lora), Georgia, serif;
 }

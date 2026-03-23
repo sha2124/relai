@@ -5,6 +5,38 @@ import { useRouter } from "next/navigation";
 import { ChatMessage } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
 import { createClient } from "@/lib/supabase/client";
+import { getArchetype } from "@/lib/quiz/archetypes";
+
+function buildProfileContext(
+  name: string,
+  relationshipStatus: string,
+  attachmentStyle: { primary?: string; label?: string; description?: string } | undefined,
+  communicationStyle: { primary?: string; label?: string; description?: string } | undefined,
+  conflictResponse: { primary?: string; label?: string; description?: string } | undefined,
+  loveLanguage: { receivingLabel?: string; givingLabel?: string } | undefined,
+  goalLabel: string,
+) {
+  const archetype = attachmentStyle?.primary && communicationStyle?.primary && conflictResponse?.primary
+    ? getArchetype(attachmentStyle.primary, communicationStyle.primary, conflictResponse.primary)
+    : null;
+
+  let ctx = `Name: ${name}\n`;
+  if (archetype) {
+    ctx += `Relationship Archetype: "${archetype.name}" — ${archetype.tagline}\n`;
+    ctx += `Archetype description: ${archetype.description}\n`;
+    ctx += `Strengths: ${archetype.strengths.join(", ")}\n`;
+    ctx += `Blind spots: ${archetype.blindSpots.join(", ")}\n`;
+    ctx += `Growth edge: ${archetype.growthEdge}\n`;
+  }
+  ctx += `Relationship status: ${relationshipStatus}\n`;
+  ctx += `Attachment style: ${attachmentStyle?.label} — ${attachmentStyle?.description}\n`;
+  ctx += `Communication style: ${communicationStyle?.label} — ${communicationStyle?.description}\n`;
+  ctx += `Conflict response: ${conflictResponse?.label} — ${conflictResponse?.description}\n`;
+  ctx += `Love language (needs): ${loveLanguage?.receivingLabel}\n`;
+  ctx += `Love language (gives): ${loveLanguage?.givingLabel}\n`;
+  ctx += `Goal: ${goalLabel}`;
+  return ctx;
+}
 
 interface Message {
   role: "user" | "assistant";
@@ -43,16 +75,15 @@ export function Chat() {
 
       if (profile) {
         setUserName(profile.name ?? "");
-        setUserProfile(
-          `Name: ${profile.name}\n` +
-          `Relationship status: ${profile.relationship_status}\n` +
-          `Attachment style: ${profile.attachment_style?.label} — ${profile.attachment_style?.description}\n` +
-          `Communication style: ${profile.communication_style?.label} — ${profile.communication_style?.description}\n` +
-          `Conflict response: ${profile.conflict_response?.label} — ${profile.conflict_response?.description}\n` +
-          `Love language (needs): ${profile.love_language?.receivingLabel}\n` +
-          `Love language (gives): ${profile.love_language?.givingLabel}\n` +
-          `Goal: ${profile.goal_label}`
-        );
+        setUserProfile(buildProfileContext(
+          profile.name,
+          profile.relationship_status,
+          profile.attachment_style,
+          profile.communication_style,
+          profile.conflict_response,
+          profile.love_language,
+          profile.goal_label,
+        ));
       } else {
         // Fall back to localStorage
         const saved = localStorage.getItem("relai-profile");
@@ -60,16 +91,15 @@ export function Chat() {
           try {
             const p = JSON.parse(saved);
             setUserName(p.name ?? "");
-            setUserProfile(
-              `Name: ${p.name}\n` +
-              `Relationship status: ${p.relationshipStatus}\n` +
-              `Attachment style: ${p.attachmentStyle?.label} — ${p.attachmentStyle?.description}\n` +
-              `Communication style: ${p.communicationStyle?.label} — ${p.communicationStyle?.description}\n` +
-              `Conflict response: ${p.conflictResponse?.label} — ${p.conflictResponse?.description}\n` +
-              `Love language (needs): ${p.loveLanguage?.receivingLabel}\n` +
-              `Love language (gives): ${p.loveLanguage?.givingLabel}\n` +
-              `Goal: ${p.goalLabel}`
-            );
+            setUserProfile(buildProfileContext(
+              p.name,
+              p.relationshipStatus,
+              p.attachmentStyle,
+              p.communicationStyle,
+              p.conflictResponse,
+              p.loveLanguage,
+              p.goalLabel,
+            ));
           } catch {
             // ignore
           }
@@ -263,23 +293,23 @@ export function Chat() {
 const STARTERS = [
   {
     emoji: "\uD83D\uDD01",
-    label: "Same argument on repeat",
-    prompt: "My partner and I keep having the same argument and I don't know how to break the cycle",
+    label: "We keep having the same fight",
+    prompt: "My partner and I keep having the same argument and I don't know how to break the cycle. Can you help me see what's really going on underneath?",
   },
   {
     emoji: "\uD83E\uDDE9",
-    label: "Understand my patterns",
-    prompt: "I want to understand my attachment style and how it affects my relationships",
-  },
-  {
-    emoji: "\uD83D\uDEE1\uFE0F",
-    label: "Setting boundaries",
-    prompt: "How do I set boundaries with my family without feeling guilty?",
+    label: "Explain my archetype to me",
+    prompt: "Can you walk me through my relationship archetype? I want to understand what it means for how I show up in relationships.",
   },
   {
     emoji: "\uD83D\uDCAC",
-    label: "Better communication",
-    prompt: "I struggle to express what I need without starting a fight",
+    label: "I need to have a hard conversation",
+    prompt: "There's something I need to tell my partner but I don't know how to say it without it turning into a fight. Can you help me find the words?",
+  },
+  {
+    emoji: "\u2764\uFE0F",
+    label: "Feeling disconnected",
+    prompt: "I feel like my partner and I are drifting apart. We're not fighting — we're just... not connecting anymore. What do I do?",
   },
 ];
 

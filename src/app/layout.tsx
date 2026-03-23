@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Lora } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -7,10 +7,16 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+const lora = Lora({
+  variable: "--font-lora",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
 export const metadata: Metadata = {
   title: "RelAI — Your Relationship Coach",
   description:
-    "An AI relationship coach that remembers you, detects your patterns, and gives personalized advice.",
+    "Understand your relationship patterns in 5 minutes. AI-powered coaching grounded in attachment theory, Gottman research, and real science.",
 };
 
 export default function RootLayout({
@@ -20,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${lora.variable} font-sans antialiased`}>
         {children}
       </body>
     </html>

@@ -53,13 +53,7 @@ export default function Home() {
   }
 
   if (!user || !hasProfile) {
-    return <Landing onStart={() => {
-      if (!user) {
-        router.push("/auth");
-      } else {
-        router.push("/quiz");
-      }
-    }} />;
+    return <Landing onStart={() => router.push("/quiz")} />;
   }
 
   return <Chat />;
@@ -81,18 +75,18 @@ function Landing({ onStart }: { onStart: () => void }) {
             </svg>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-semibold text-[#1a1008] mb-5 tracking-tight leading-tight">
-            Understand your<br />relationship patterns.
+          <h1 className="font-heading text-4xl sm:text-5xl font-semibold text-[#1a1008] mb-5 tracking-tight leading-tight">
+            Why do you keep having<br />the same fight?
           </h1>
 
           <p className="text-[#8a7a66] text-base sm:text-lg leading-relaxed mb-10 max-w-md mx-auto">
-            RelAI is a practice space — understand your patterns, find the words, then go have the real conversation.
+            Find your relationship archetype in 5 minutes. Understand your patterns, find the words, then go have the real conversation.
           </p>
 
           <button type="button" onClick={onStart} className="rounded-xl bg-gradient-to-r from-[#4a7c6b] to-[#2d4e43] px-10 py-4 text-white font-semibold text-lg hover:shadow-lg transition-all">
-            Take the free quiz
+            Discover your archetype
           </button>
-          <p className="text-xs text-[#c4bbaf] mt-4">5 minutes &middot; Free account required</p>
+          <p className="text-xs text-[#c4bbaf] mt-4">Free &middot; No account required &middot; 5 minutes</p>
 
           <div className="mt-16 grid grid-cols-3 gap-6 text-center">
             {[
@@ -109,59 +103,11 @@ function Landing({ onStart }: { onStart: () => void }) {
         </div>
       </section>
 
-      {/* ── WHAT EXPERTS SAY ── */}
+      {/* ── HOW IT WORKS ── */}
       <section className="px-6 py-20 bg-white/40">
         <div className="max-w-2xl mx-auto">
-          <p className="text-xs tracking-[0.2em] uppercase text-[#4a7c6b] font-medium text-center mb-3">Grounded in research</p>
-          <h2 className="text-2xl sm:text-3xl font-semibold text-[#1a1008] text-center mb-4 tracking-tight">
-            What relationship experts know
-          </h2>
-          <p className="text-[#8a7a66] text-center mb-12 max-w-lg mx-auto leading-relaxed">
-            RelAI&apos;s coaching is built on decades of peer-reviewed research — not generic advice from the internet.
-          </p>
-
-          <div className="space-y-6">
-            {[
-              {
-                quote: "Most relationship problems aren\u2019t about the topic you\u2019re arguing about. They\u2019re about the pattern underneath.",
-                author: "Dr. John Gottman",
-                role: "The Gottman Institute \u2014 40+ years of couples research",
-                insight: "RelAI helps you identify your recurring conflict patterns so you can break the cycle instead of repeating it.",
-              },
-              {
-                quote: "The quality of our relationships determines the quality of our lives. And the quality of our relationships is shaped by how well we understand ourselves.",
-                author: "Esther Perel",
-                role: "Psychotherapist & bestselling author",
-                insight: "The onboarding quiz maps your attachment style, communication patterns, and love language \u2014 so every conversation starts from self-awareness.",
-              },
-              {
-                quote: "Are you there for me? That\u2019s the fundamental question every partner is really asking.",
-                author: "Dr. Sue Johnson",
-                role: "Creator of Emotionally Focused Therapy",
-                insight: "RelAI coaches you to hear the real question underneath the surface \u2014 and respond to what your partner actually needs.",
-              },
-            ].map((item) => (
-              <div key={item.author} className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-6 shadow-sm">
-                <p className="text-[#2d2418] text-base italic leading-relaxed mb-4">&ldquo;{item.quote}&rdquo;</p>
-                <p className="text-sm font-semibold text-[#1a1008]">{item.author}</p>
-                <p className="text-xs text-[#8a7a66] mb-4">{item.role}</p>
-                <div className="border-t border-[#e8e4df] pt-3">
-                  <p className="text-sm text-[#4a7c6b] font-medium flex items-start gap-2">
-                    <span className="shrink-0 mt-0.5">{"\u2192"}</span>
-                    {item.insight}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── HOW IT WORKS ── */}
-      <section className="px-6 py-20">
-        <div className="max-w-2xl mx-auto">
           <p className="text-xs tracking-[0.2em] uppercase text-[#4a7c6b] font-medium text-center mb-3">How it works</p>
-          <h2 className="text-2xl sm:text-3xl font-semibold text-[#1a1008] text-center mb-12 tracking-tight">
+          <h2 className="font-heading text-2xl sm:text-3xl font-semibold text-[#1a1008] text-center mb-12 tracking-tight">
             Three steps to clarity
           </h2>
 
@@ -170,13 +116,13 @@ function Landing({ onStart }: { onStart: () => void }) {
               {
                 step: "01",
                 title: "Take the quiz",
-                description: "Answer 14 questions about how you connect, communicate, and handle conflict. Takes about 5 minutes.",
+                description: "Answer 14 research-backed questions about how you connect, communicate, and handle conflict. No account needed.",
                 image: "\uD83E\uDDE9",
               },
               {
                 step: "02",
-                title: "See your patterns",
-                description: "Get your attachment style, communication profile, conflict response, and love language \u2014 with real explanations, not labels.",
+                title: "Meet your archetype",
+                description: "Get a named relationship archetype — like The Peacekeeper or The Lone Wolf — with your strengths, blind spots, and a personalized growth edge.",
                 image: "\uD83D\uDD0D",
               },
               {
@@ -201,11 +147,217 @@ function Landing({ onStart }: { onStart: () => void }) {
         </div>
       </section>
 
-      {/* ── PRICING TIERS ── */}
+      {/* ── SAMPLE ARCHETYPE PREVIEW ── */}
+      <section className="px-6 py-20">
+        <div className="max-w-2xl mx-auto">
+          <p className="text-xs tracking-[0.2em] uppercase text-[#4a7c6b] font-medium text-center mb-3">What you&apos;ll discover</p>
+          <h2 className="font-heading text-2xl sm:text-3xl font-semibold text-[#1a1008] text-center mb-4 tracking-tight">
+            Your relationship archetype, revealed.
+          </h2>
+          <p className="text-[#8a7a66] text-center mb-12 max-w-lg mx-auto leading-relaxed">
+            Not a vague label. A real portrait of how you love — with the science to back it up.
+          </p>
+
+          {/* Sample archetype card */}
+          <div className="max-w-md mx-auto">
+            <div className="bg-white/80 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-8 shadow-md text-center">
+              <div
+                className="h-20 w-20 rounded-full flex items-center justify-center mx-auto mb-5"
+                style={{ background: "linear-gradient(135deg, #c4849c20, #c4849c40)", border: "2px solid #c4849c30" }}
+              >
+                <span className="text-3xl">{"\uD83D\uDD0D"}</span>
+              </div>
+              <p className="text-[10px] tracking-[0.2em] uppercase text-[#c4849c] font-medium mb-2">Sample archetype</p>
+              <h3 className="font-heading text-2xl font-semibold text-[#1a1008] mb-2">The Seeker</h3>
+              <p className="text-sm text-[#8a7a66] italic mb-5">&ldquo;Always reaching for deeper connection&rdquo;</p>
+              <div className="grid grid-cols-2 gap-3 text-left mb-5">
+                <div className="bg-[#f0ece4] rounded-xl p-3">
+                  <p className="text-[10px] uppercase tracking-wider text-[#4a7c6b] font-medium mb-1">Strengths</p>
+                  <p className="text-xs text-[#2d2418]">Emotional attunement, deep intimacy, commitment</p>
+                </div>
+                <div className="bg-[#f0ece4] rounded-xl p-3">
+                  <p className="text-[10px] uppercase tracking-wider text-[#c45c5c] font-medium mb-1">Blind spots</p>
+                  <p className="text-xs text-[#2d2418]">Over-reading signals, reassurance-seeking</p>
+                </div>
+              </div>
+              <div className="bg-[#4a7c6b08] border border-[#4a7c6b20] rounded-xl p-3">
+                <p className="text-[10px] uppercase tracking-wider text-[#4a7c6b] font-medium mb-1">Growth edge</p>
+                <p className="text-xs text-[#2d2418] italic">&ldquo;Build your own emotional home base...&rdquo;</p>
+              </div>
+            </div>
+            <p className="text-center text-xs text-[#c4bbaf] mt-4">One of 14 possible archetypes</p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── WHAT EXPERTS SAY ── */}
       <section className="px-6 py-20 bg-white/40">
+        <div className="max-w-2xl mx-auto">
+          <p className="text-xs tracking-[0.2em] uppercase text-[#4a7c6b] font-medium text-center mb-3">Grounded in research</p>
+          <h2 className="font-heading text-2xl sm:text-3xl font-semibold text-[#1a1008] text-center mb-4 tracking-tight">
+            Built on real science, not vibes
+          </h2>
+          <p className="text-[#8a7a66] text-center mb-12 max-w-lg mx-auto leading-relaxed">
+            Every question, archetype, and coaching response is grounded in decades of peer-reviewed relationship research.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
+            {[
+              {
+                title: "Attachment Theory",
+                author: "Bowlby & Ainsworth",
+                description: "How your early bonds shape the way you connect in adult relationships.",
+              },
+              {
+                title: "The Gottman Method",
+                author: "Drs. John & Julie Gottman",
+                description: "The Four Horsemen, bids for connection, repair attempts — 40 years of research.",
+              },
+              {
+                title: "Emotionally Focused Therapy",
+                author: "Dr. Sue Johnson",
+                description: "Breaking negative cycles of disconnection between partners.",
+              },
+              {
+                title: "Nonviolent Communication",
+                author: "Marshall Rosenberg",
+                description: "Expressing needs without blame, hearing others without defensiveness.",
+              },
+            ].map((item) => (
+              <div key={item.title} className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-5 shadow-sm">
+                <h3 className="text-base font-semibold text-[#1a1008] mb-1">{item.title}</h3>
+                <p className="text-xs text-[#4a7c6b] font-medium mb-2">{item.author}</p>
+                <p className="text-sm text-[#8a7a66] leading-relaxed">{item.description}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Expert quotes */}
+          <div className="space-y-4">
+            {[
+              {
+                quote: "Most relationship problems aren\u2019t about the topic you\u2019re arguing about. They\u2019re about the pattern underneath.",
+                author: "Dr. John Gottman",
+                role: "40+ years of couples research",
+              },
+              {
+                quote: "The quality of our relationships determines the quality of our lives.",
+                author: "Esther Perel",
+                role: "Psychotherapist & bestselling author",
+              },
+              {
+                quote: "Are you there for me? That\u2019s the fundamental question every partner is really asking.",
+                author: "Dr. Sue Johnson",
+                role: "Creator of Emotionally Focused Therapy",
+              },
+            ].map((item) => (
+              <div key={item.author} className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-5 shadow-sm">
+                <p className="font-heading text-[#2d2418] text-base italic leading-relaxed mb-3">&ldquo;{item.quote}&rdquo;</p>
+                <p className="text-sm font-semibold text-[#1a1008]">{item.author}</p>
+                <p className="text-xs text-[#8a7a66]">{item.role}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── TESTIMONIALS ── */}
+      <section className="px-6 py-20">
+        <div className="max-w-2xl mx-auto">
+          <p className="text-xs tracking-[0.2em] uppercase text-[#4a7c6b] font-medium text-center mb-3">Early feedback</p>
+          <h2 className="font-heading text-2xl sm:text-3xl font-semibold text-[#1a1008] text-center mb-12 tracking-tight">
+            What people are saying
+          </h2>
+
+          <div className="space-y-4">
+            {[
+              {
+                text: "I got The Peacekeeper and it was scarily accurate. I\u2019ve been suppressing what I need for years to keep the peace. Seeing it written out — not as a flaw, but as a pattern I can change — that hit hard.",
+                name: "M.R.",
+                detail: "28, in a relationship for 3 years",
+                archetype: "The Peacekeeper",
+              },
+              {
+                text: "My husband and I took the quiz separately and compared archetypes. We had a better conversation that night than we\u2019d had in months. Just seeing our patterns side by side was enough.",
+                name: "A.K.",
+                detail: "34, married 6 years",
+                archetype: "The Steady Flame",
+              },
+              {
+                text: "I was skeptical about talking to an AI about my relationship. But it asked me a question my therapist never has, and I sat with it for days. Something about it being low-stakes made me more honest.",
+                name: "J.T.",
+                detail: "31, recently out of a long-term relationship",
+                archetype: "The Lone Wolf",
+              },
+              {
+                text: "The part about how I give love vs. how I need to receive it — that gap explained like 80% of the tension with my partner. Simple insight, massive impact.",
+                name: "S.L.",
+                detail: "26, dating someone new",
+                archetype: "The Tender Heart",
+              },
+            ].map((item) => (
+              <div key={item.name} className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-6 shadow-sm">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-[10px] tracking-wider uppercase font-medium text-[#4a7c6b] bg-[#d4e6df] px-2 py-0.5 rounded-full">
+                    {item.archetype}
+                  </span>
+                </div>
+                <p className="text-[#2d2418] text-sm leading-relaxed mb-4">&ldquo;{item.text}&rdquo;</p>
+                <div>
+                  <p className="text-sm font-semibold text-[#1a1008]">{item.name}</p>
+                  <p className="text-xs text-[#8a7a66]">{item.detail}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section className="px-6 py-20 bg-white/40">
+        <div className="max-w-2xl mx-auto">
+          <p className="text-xs tracking-[0.2em] uppercase text-[#4a7c6b] font-medium text-center mb-3">Common questions</p>
+          <h2 className="font-heading text-2xl sm:text-3xl font-semibold text-[#1a1008] text-center mb-12 tracking-tight">
+            Before you start
+          </h2>
+
+          <div className="space-y-4">
+            {[
+              {
+                q: "Is this therapy?",
+                a: "No. RelAI is a relationship coaching tool — a practice space for understanding your patterns and finding the right words. It\u2019s informed by therapy frameworks (Gottman, attachment theory, EFT) but it\u2019s not a substitute for a licensed professional.",
+              },
+              {
+                q: "Do I need to create an account?",
+                a: "Not to take the quiz. You\u2019ll see your archetype and full results for free, no sign-up needed. Creating an account saves your profile and unlocks the AI coach chat.",
+              },
+              {
+                q: "Is my data private?",
+                a: "Yes. Your conversations and profile are private. We never sell your data, share it with partners, or use it for advertising. Each user can only see their own data.",
+              },
+              {
+                q: "What if I\u2019m in crisis?",
+                a: "If you\u2019re experiencing abuse, suicidal thoughts, or a mental health emergency, please contact a crisis helpline. RelAI will always point you to professional resources — it\u2019s built into the system.",
+              },
+              {
+                q: "Can my partner take it too?",
+                a: "Yes! Each partner takes the quiz separately and gets their own archetype. Comparing results side by side often sparks the most meaningful conversations. Partner linking is coming soon.",
+              },
+            ].map((item) => (
+              <div key={item.q} className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-6 shadow-sm">
+                <h3 className="text-base font-semibold text-[#1a1008] mb-2">{item.q}</h3>
+                <p className="text-sm text-[#8a7a66] leading-relaxed">{item.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── PRICING TIERS ── */}
+      <section className="px-6 py-20">
         <div className="max-w-3xl mx-auto">
           <p className="text-xs tracking-[0.2em] uppercase text-[#4a7c6b] font-medium text-center mb-3">Simple pricing</p>
-          <h2 className="text-2xl sm:text-3xl font-semibold text-[#1a1008] text-center mb-4 tracking-tight">
+          <h2 className="font-heading text-2xl sm:text-3xl font-semibold text-[#1a1008] text-center mb-4 tracking-tight">
             Start free. Go deeper when you&apos;re ready.
           </h2>
           <p className="text-[#8a7a66] text-center mb-12 max-w-md mx-auto">
@@ -219,10 +371,10 @@ function Landing({ onStart }: { onStart: () => void }) {
               <p className="text-3xl font-semibold text-[#1a1008] mb-1">$0</p>
               <p className="text-xs text-[#8a7a66] mb-6">Forever</p>
               <ul className="space-y-3 text-sm text-[#4a3d2e]">
-                <li className="flex gap-2"><span className="text-[#4a7c6b]">{"\u2713"}</span> Relationship quiz + profile</li>
+                <li className="flex gap-2"><span className="text-[#4a7c6b]">{"\u2713"}</span> Quiz + archetype (no signup)</li>
                 <li className="flex gap-2"><span className="text-[#4a7c6b]">{"\u2713"}</span> 5 coach messages / day</li>
-                <li className="flex gap-2"><span className="text-[#4a7c6b]">{"\u2713"}</span> Attachment style insights</li>
-                <li className="flex gap-2"><span className="text-[#4a7c6b]">{"\u2713"}</span> Communication profile</li>
+                <li className="flex gap-2"><span className="text-[#4a7c6b]">{"\u2713"}</span> Full trait breakdown</li>
+                <li className="flex gap-2"><span className="text-[#4a7c6b]">{"\u2713"}</span> Growth edge & blind spots</li>
               </ul>
             </div>
 
@@ -238,7 +390,7 @@ function Landing({ onStart }: { onStart: () => void }) {
                 <li className="flex gap-2"><span className="text-[#4a7c6b]">{"\u2713"}</span> Everything in Free</li>
                 <li className="flex gap-2"><span className="text-[#4a7c6b]">{"\u2713"}</span> Unlimited coach messages</li>
                 <li className="flex gap-2"><span className="text-[#4a7c6b]">{"\u2713"}</span> Partner profile</li>
-                <li className="flex gap-2"><span className="text-[#4a7c6b]">{"\u2713"}</span> Activity &amp; bonding ideas</li>
+                <li className="flex gap-2"><span className="text-[#4a7c6b]">{"\u2713"}</span> Guided exercises</li>
                 <li className="flex gap-2"><span className="text-[#4a7c6b]">{"\u2713"}</span> Pattern insights over time</li>
               </ul>
             </div>
@@ -253,7 +405,7 @@ function Landing({ onStart }: { onStart: () => void }) {
                 <li className="flex gap-2"><span className="text-[#4a7c6b]">{"\u2713"}</span> Partner takes quiz too</li>
                 <li className="flex gap-2"><span className="text-[#4a7c6b]">{"\u2713"}</span> AI-mediated sessions</li>
                 <li className="flex gap-2"><span className="text-[#4a7c6b]">{"\u2713"}</span> Conflict detection</li>
-                <li className="flex gap-2"><span className="text-[#4a7c6b]">{"\u2713"}</span> Shared relationship dashboard</li>
+                <li className="flex gap-2"><span className="text-[#4a7c6b]">{"\u2713"}</span> Shared dashboard</li>
                 <li className="flex gap-2"><span className="text-[#4a7c6b]">{"\u2713"}</span> Voice sessions</li>
               </ul>
             </div>
@@ -261,129 +413,17 @@ function Landing({ onStart }: { onStart: () => void }) {
         </div>
       </section>
 
-      {/* ── WHAT IT'S BASED ON ── */}
-      <section className="px-6 py-20">
-        <div className="max-w-2xl mx-auto">
-          <p className="text-xs tracking-[0.2em] uppercase text-[#4a7c6b] font-medium text-center mb-3">The science</p>
-          <h2 className="text-2xl sm:text-3xl font-semibold text-[#1a1008] text-center mb-12 tracking-tight">
-            Built on real frameworks, not vibes
-          </h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {[
-              {
-                title: "Attachment Theory",
-                author: "Bowlby & Ainsworth",
-                description: "How your early bonds shape the way you connect in adult relationships \u2014 and what to do about it.",
-              },
-              {
-                title: "The Gottman Method",
-                author: "Drs. John & Julie Gottman",
-                description: "The Four Horsemen, bids for connection, repair attempts \u2014 40 years of research on what makes relationships last.",
-              },
-              {
-                title: "Emotionally Focused Therapy",
-                author: "Dr. Sue Johnson",
-                description: "Understanding the emotional dance between partners and breaking negative cycles of disconnection.",
-              },
-              {
-                title: "Nonviolent Communication",
-                author: "Marshall Rosenberg",
-                description: "Expressing needs without blame, hearing others without defensiveness \u2014 the language of connection.",
-              },
-            ].map((item) => (
-              <div key={item.title} className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-5 shadow-sm">
-                <h3 className="text-base font-semibold text-[#1a1008] mb-1">{item.title}</h3>
-                <p className="text-xs text-[#4a7c6b] font-medium mb-2">{item.author}</p>
-                <p className="text-sm text-[#8a7a66] leading-relaxed">{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── TESTIMONIALS ── */}
-      <section className="px-6 py-20 bg-white/40">
-        <div className="max-w-2xl mx-auto">
-          <p className="text-xs tracking-[0.2em] uppercase text-[#4a7c6b] font-medium text-center mb-3">Early feedback</p>
-          <h2 className="text-2xl sm:text-3xl font-semibold text-[#1a1008] text-center mb-12 tracking-tight">
-            What people are saying
-          </h2>
-
-          <div className="space-y-4">
-            {[
-              {
-                text: "I always knew I was \u2018the anxious one\u2019 but seeing it laid out with actual explanations \u2014 not judgment \u2014 hit different. I finally understand why I double-text.",
-                name: "M.R.",
-                detail: "28, in a relationship for 3 years",
-                stars: 5,
-              },
-              {
-                text: "My husband and I took the quiz separately and compared results. We had a better conversation that night than we\u2019d had in months. We didn\u2019t even use the chat \u2014 just seeing our patterns side by side was enough.",
-                name: "A.K.",
-                detail: "34, married 6 years",
-                stars: 5,
-              },
-              {
-                text: "I was skeptical about talking to an AI about my relationship. But it asked me a question my therapist never has, and I sat with it for days. Something about it being low-stakes made me more honest.",
-                name: "J.T.",
-                detail: "31, recently out of a long-term relationship",
-                stars: 5,
-              },
-              {
-                text: "The part about how I give love vs. how I need to receive it \u2014 that gap explained like 80% of the tension with my partner. Simple insight, massive impact.",
-                name: "S.L.",
-                detail: "26, dating someone new",
-                stars: 4,
-              },
-            ].map((item) => (
-              <div key={item.name} className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-6 shadow-sm">
-                <div className="flex gap-0.5 mb-3">
-                  {Array.from({ length: item.stars }).map((_, i) => (
-                    <span key={i} className="text-[#e8b931] text-sm">{"\u2605"}</span>
-                  ))}
-                </div>
-                <p className="text-[#2d2418] text-sm leading-relaxed mb-4">&ldquo;{item.text}&rdquo;</p>
-                <div>
-                  <p className="text-sm font-semibold text-[#1a1008]">{item.name}</p>
-                  <p className="text-xs text-[#8a7a66]">{item.detail}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── OUR PROMISE ── */}
-      <section className="px-6 py-20">
-        <div className="max-w-lg mx-auto text-center">
-          <p className="text-xs tracking-[0.2em] uppercase text-[#4a7c6b] font-medium mb-3">Our promise</p>
-          <h2 className="text-2xl sm:text-3xl font-semibold text-[#1a1008] mb-6 tracking-tight">
-            We&apos;re not here to replace anyone.
-          </h2>
-          <p className="text-[#8a7a66] leading-relaxed mb-4">
-            RelAI is a practice space, not a replacement for the people in your life. We&apos;re here to help you find the words, understand the patterns, and build the courage.
-          </p>
-          <p className="text-[#8a7a66] leading-relaxed mb-4">
-            Then go have the real conversation.
-          </p>
-          <p className="text-sm text-[#8a7a66] leading-relaxed">
-            If you&apos;re experiencing abuse, crisis, or a mental health emergency, please reach out to a professional. We&apos;ll always point you in the right direction.
-          </p>
-        </div>
-      </section>
-
       {/* ── FINAL CTA ── */}
       <section className="px-6 py-20 bg-white/40">
         <div className="max-w-lg mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl font-semibold text-[#1a1008] mb-4 tracking-tight">
-            Ready to understand your patterns?
+          <h2 className="font-heading text-2xl sm:text-3xl font-semibold text-[#1a1008] mb-4 tracking-tight">
+            Ready to meet your archetype?
           </h2>
           <p className="text-[#8a7a66] mb-8">
-            It starts with 14 questions. Free account. No credit card. Just honesty.
+            14 questions. 5 minutes. No account needed. Just honesty.
           </p>
           <button type="button" onClick={onStart} className="rounded-xl bg-gradient-to-r from-[#4a7c6b] to-[#2d4e43] px-10 py-4 text-white font-semibold text-lg hover:shadow-lg transition-all">
-            Take the free quiz
+            Discover your archetype
           </button>
         </div>
       </section>
@@ -391,7 +431,7 @@ function Landing({ onStart }: { onStart: () => void }) {
       {/* ── FOOTER ── */}
       <footer className="px-6 py-8 text-center border-t border-[#e8e4df]/60">
         <p className="text-[10px] text-[#c4bbaf] tracking-wide">
-          RelAI &middot; A practice space for your relationships &middot; Not a replacement for professional therapy
+          RelAI &middot; Relationship coaching, not therapy &middot; Your data stays private
         </p>
       </footer>
     </div>

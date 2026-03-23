@@ -1,9 +1,11 @@
 import type { QuizQuestion } from "./questions";
+import { getArchetype, type Archetype } from "./archetypes";
 
 export interface UserProfile {
   name: string;
   relationshipStatus: string;
   relationshipLength: string;
+  archetype: Archetype;
   attachmentStyle: {
     primary: string;
     label: string;
@@ -148,10 +150,14 @@ export function computeProfile(
   // Goal
   const goal = answers["why-here"] ?? "understand-self";
 
+  // Determine archetype from trait combination
+  const archetype = getArchetype(attachmentKey, commKey, conflictKey);
+
   return {
     name: answers.name ?? "there",
     relationshipStatus: answers["relationship-status"] ?? "",
     relationshipLength: answers["relationship-length"] ?? "",
+    archetype,
     attachmentStyle: {
       primary: attachmentKey,
       label: attachment.label,

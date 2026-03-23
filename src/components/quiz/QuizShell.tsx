@@ -12,6 +12,7 @@ export function QuizShell() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [analyzing, setAnalyzing] = useState(false);
 
   // Persist answers to localStorage
   useEffect(() => {
@@ -40,7 +41,7 @@ export function QuizShell() {
   async function saveProfileToSupabase(profile: UserProfile) {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    if (!user) return; // Not logged in — skip DB save
 
     await supabase.from("profiles").upsert({
       user_id: user.id,
@@ -58,6 +59,19 @@ export function QuizShell() {
     }, { onConflict: "user_id" });
   }
 
+  function finishQuiz(finalAnswers: Record<string, string>) {
+    const profile = computeProfile(finalAnswers, QUESTIONS);
+    localStorage.setItem("relai-profile", JSON.stringify(profile));
+    localStorage.removeItem("relai-quiz");
+    saveProfileToSupabase(profile);
+
+    // Show analyzing animation, then navigate
+    setAnalyzing(true);
+    setTimeout(() => {
+      router.push("/profile");
+    }, 3200);
+  }
+
   function handleAnswer(optionId: string) {
     const newAnswers = { ...answers, [question.id]: optionId };
     setAnswers(newAnswers);
@@ -67,12 +81,7 @@ export function QuizShell() {
       if (step < QUESTIONS.length - 1) {
         setStep(step + 1);
       } else {
-        // Quiz complete — compute profile and navigate
-        const profile = computeProfile(newAnswers, QUESTIONS);
-        localStorage.setItem("relai-profile", JSON.stringify(profile));
-        localStorage.removeItem("relai-quiz");
-        saveProfileToSupabase(profile);
-        router.push("/profile");
+        finishQuiz(newAnswers);
       }
     }, 300);
   }
@@ -80,15 +89,41 @@ export function QuizShell() {
   function handleNameSubmit(name: string) {
     const newAnswers = { ...answers, name };
     setAnswers(newAnswers);
-    const profile = computeProfile(newAnswers, QUESTIONS);
-    localStorage.setItem("relai-profile", JSON.stringify(profile));
-    localStorage.removeItem("relai-quiz");
-    saveProfileToSupabase(profile);
-    router.push("/profile");
+    finishQuiz(newAnswers);
   }
 
   function handleBack() {
     if (step > 0) setStep(step - 1);
+  }
+
+  // ── Analyzing screen ──
+  if (analyzing) {
+    return (
+      <div className="min-h-[100dvh] bg-gradient-warm flex flex-col items-center justify-center px-6">
+        <div className="max-w-sm w-full text-center">
+          <div className="h-20 w-20 rounded-full bg-gradient-to-br from-[#4a7c6b] to-[#2d4e43] flex items-center justify-center mx-auto mb-8 analyzing-pulse">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="text-white">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </div>
+
+          <h2 className="font-heading text-2xl font-semibold text-[#1a1008] mb-3">
+            Analyzing your patterns...
+          </h2>
+          <p className="text-sm text-[#8a7a66] mb-8">
+            Mapping your attachment style, communication patterns, and relationship dynamics
+          </p>
+
+          {/* Progress bar */}
+          <div className="h-1.5 bg-[#e8e4df] rounded-full overflow-hidden">
+            <div
+              className="h-full rounded-full analyzing-bar"
+              style={{ background: "linear-gradient(90deg, #4a7c6b, #2d4e43)" }}
+            />
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (!question) return null;
