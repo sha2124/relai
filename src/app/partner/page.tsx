@@ -102,6 +102,14 @@ export default function PartnerPage() {
           .single();
 
         if (asPartner) {
+          // Mark as linked so the UI shows the linked state
+          setLink({
+            id: asPartner.id,
+            invite_code: asPartner.invite_code,
+            status: "linked",
+            partner_id: asPartner.user_id, // the creator is "my partner"
+          });
+
           const { data: creatorProfile } = await supabase
             .from("profiles")
             .select("name, attachment_style, communication_style, conflict_response")
