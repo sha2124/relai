@@ -69,7 +69,7 @@ You have access to the user's archetype, profile, and conversation history. Use 
 - Don't diagnose mental health conditions
 - If issues exceed coaching scope: "This sounds like something a licensed therapist could really help with. Want me to talk about what to look for?"`;
 
-export function buildSystemPrompt(userProfile?: string, conversationSummary?: string): string {
+export function buildSystemPrompt(userProfile?: string, conversationSummary?: string, journalContext?: string): string {
   let prompt = SYSTEM_PROMPT;
 
   if (userProfile) {
@@ -78,6 +78,10 @@ export function buildSystemPrompt(userProfile?: string, conversationSummary?: st
 
   if (conversationSummary) {
     prompt += `\n\n## Previous Conversation Context\n${conversationSummary}`;
+  }
+
+  if (journalContext) {
+    prompt += `\n\n## Recent Journal Entries\nThe user has been keeping a relationship journal. Here are their recent entries — reference these naturally when relevant, but don't force it:\n${journalContext}`;
   }
 
   return prompt;

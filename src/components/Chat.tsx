@@ -48,10 +48,12 @@ export function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [userProfile, setUserProfile] = useState<string | undefined>();
+  const [journalContext, setJournalContext] = useState<string | undefined>();
   const [userName, setUserName] = useState("");
   const [userId, setUserId] = useState<string | null>(null);
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [showCrisis, setShowCrisis] = useState(false);
+  const [showNav, setShowNav] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Load profile and conversation history from Supabase
@@ -107,6 +109,24 @@ export function Chat() {
         }
       }
 
+      // Load recent journal entries for AI context
+      const { data: journalEntries } = await supabase
+        .from("journal_entries")
+        .select("content, mood, tags, created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(5);
+
+      if (journalEntries && journalEntries.length > 0) {
+        const ctx = journalEntries.map((j) => {
+          const date = new Date(j.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+          const mood = j.mood ? ` (feeling: ${j.mood})` : "";
+          const tags = j.tags?.length ? ` [${j.tags.join(", ")}]` : "";
+          return `- ${date}${mood}${tags}: ${j.content}`;
+        }).join("\n");
+        setJournalContext(ctx);
+      }
+
       // Load recent conversation history (last 50 messages)
       const { data: history } = await supabase
         .from("messages")
@@ -120,6 +140,14 @@ export function Chat() {
       }
 
       setLoadingHistory(false);
+
+      // Check if there's an exercise prompt to send
+      const exercisePrompt = localStorage.getItem("relai-exercise-prompt");
+      if (exercisePrompt) {
+        localStorage.removeItem("relai-exercise-prompt");
+        // Small delay to let the UI render first
+        setTimeout(() => handleSendFromExercise(exercisePrompt), 500);
+      }
     }
 
     load();
@@ -150,6 +178,11 @@ export function Chat() {
     router.refresh();
   }
 
+  // Separate ref-stable function for exercise prompts (avoids stale closure)
+  const handleSendFromExercise = async (content: string) => {
+    handleSend(content);
+  };
+
   async function handleSend(content: string) {
     const userMessage: Message = { role: "user", content };
     const updatedMessages = [...messages, userMessage];
@@ -165,7 +198,7 @@ export function Chat() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: updatedMessages, userProfile }),
+        body: JSON.stringify({ messages: updatedMessages, userProfile, journalContext }),
       });
 
       if (!res.ok || !res.body) {
@@ -247,7 +280,7 @@ export function Chat() {
               <p className="text-[11px] text-[#8a7a66]">Your relationship coach</p>
             </div>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => setShowCrisis(true)}
@@ -255,13 +288,47 @@ export function Chat() {
             >
               I need help now
             </button>
-            <button
-              type="button"
-              onClick={handleSignOut}
-              className="text-xs text-[#8a7a66] hover:text-[#1a1008] transition-colors"
-            >
-              Sign out
-            </button>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setShowNav(!showNav)}
+                className="p-1.5 rounded-lg text-[#8a7a66] hover:text-[#1a1008] hover:bg-[#f0ece4] transition-all"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+              </button>
+              {showNav && (
+                <div className="absolute right-0 top-full mt-2 w-48 bg-white/95 backdrop-blur-md border border-[#e8e4df] rounded-xl shadow-lg overflow-hidden z-50 msg-enter">
+                  {[
+                    { href: "/profile", label: "My Profile", icon: "👤" },
+                    { href: "/dashboard", label: "Progress", icon: "📊" },
+                    { href: "/journal", label: "Journal", icon: "📓" },
+                    { href: "/exercises", label: "Exercises", icon: "🏋️" },
+                    { href: "/partner", label: "Partner", icon: "💑" },
+                    { href: "/pricing", label: "Pricing", icon: "💎" },
+                  ].map((item) => (
+                    <button
+                      key={item.href}
+                      type="button"
+                      onClick={() => { setShowNav(false); router.push(item.href); }}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-sm text-[#2d2418] hover:bg-[#f5f2ee] transition-colors text-left"
+                    >
+                      <span>{item.icon}</span>
+                      <span>{item.label}</span>
+                    </button>
+                  ))}
+                  <div className="border-t border-[#e8e4df]">
+                    <button
+                      type="button"
+                      onClick={() => { setShowNav(false); handleSignOut(); }}
+                      className="w-full flex items-center gap-3 px-4 py-3 text-sm text-[#8a7a66] hover:bg-[#f5f2ee] transition-colors text-left"
+                    >
+                      <span>👋</span>
+                      <span>Sign out</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </header>

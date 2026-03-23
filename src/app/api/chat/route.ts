@@ -14,7 +14,7 @@ const RECENT_MESSAGE_COUNT = 20;
 
 export async function POST(request: Request) {
   try {
-    const { messages, userProfile, conversationSummary } = await request.json();
+    const { messages, userProfile, conversationSummary, journalContext } = await request.json();
 
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return Response.json({ error: "Messages are required" }, { status: 400 });
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
       }
     }
 
-    const systemPrompt = buildSystemPrompt(userProfile, summary);
+    const systemPrompt = buildSystemPrompt(userProfile, summary, journalContext);
 
     const stream = await client.chat.completions.create({
       model: MODEL,

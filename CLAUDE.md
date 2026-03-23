@@ -22,20 +22,27 @@ src/
 ├── app/
 │   ├── api/          # API routes (chat endpoint)
 │   ├── auth/         # Auth pages (login/signup)
+│   ├── dashboard/    # Progress tracking dashboard
+│   ├── exercises/    # Guided exercise library
+│   ├── journal/      # Relationship journal
+│   ├── partner/      # Partner linking
+│   ├── pricing/      # Billing & pricing page
 │   ├── profile/      # Profile result page
 │   ├── quiz/         # Onboarding quiz flow
+│   ├── share/        # Shareable archetype cards
 │   ├── layout.tsx    # Root layout
-│   └── page.tsx      # Landing page
+│   └── page.tsx      # Landing page / chat
 ├── components/
-│   ├── Chat.tsx      # Main chat container
+│   ├── Chat.tsx      # Main chat container (with nav menu)
 │   ├── ChatInput.tsx # Message input
 │   ├── ChatMessage.tsx # Message bubble
 │   └── quiz/         # Quiz step components
 ├── lib/
-│   ├── quiz/         # Quiz logic, questions, scoring
-│   ├── supabase/     # Supabase client (browser + server)
+│   ├── quiz/         # Quiz logic, questions, scoring, archetypes
+│   ├── supabase/     # Supabase client (browser + server) + SQL schemas
+│   ├── exercises.ts  # 12 guided exercises with metadata
 │   ├── summarize.ts  # Conversation memory summarization
-│   └── system-prompt.ts # AI coach persona + profile context
+│   └── system-prompt.ts # AI coach persona + profile + journal context
 └── middleware.ts     # Auth route protection
 ```
 
@@ -51,6 +58,8 @@ src/
 
 - `profiles`: user_id, name, attachment_style (jsonb), communication_style (jsonb), conflict_response (jsonb), love_language (jsonb), goal, scores
 - `messages`: user_id, role, content, created_at
+- `partner_links`: user_id, partner_id, invite_code, status (pending/linked)
+- `journal_entries`: user_id, content, mood, tags (text[]), created_at
 
 ## Commands
 
@@ -68,9 +77,9 @@ npm run lint    # ESLint
 
 ## What's Built vs Not Built
 
-**Done:** Landing page, onboarding quiz (14 questions), profile results, AI chat with streaming, Supabase auth, profile persistence, conversation history + memory summarization
+**Done:** Landing page, onboarding quiz (14 questions), 14 named archetypes, profile results, AI chat with streaming, Supabase auth, profile persistence, conversation history + memory summarization, shareable archetype cards, crisis resources, partner linking, relationship journal, guided exercise library (12 exercises), progress tracking dashboard, pricing page
 
-**Not yet:** Partner features (describe/invite), relationship dashboard, voice (notes → real-time), mediated sessions, conflict detection, Stripe billing
+**Not yet:** Stripe checkout integration, mediated sessions, conflict detection, voice (notes → real-time), async follow-ups
 
 ## Working Conventions
 
