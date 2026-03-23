@@ -195,10 +195,12 @@ export default function PartnerPage() {
           </button>
 
           <h1 className="font-heading text-3xl sm:text-4xl font-semibold text-[#1a1008] mb-3 tracking-tight">
-            Partner Linking
+            {isLinked ? "You & Your Partner" : "Partner Linking"}
           </h1>
           <p className="text-[#8a7a66] text-base leading-relaxed mb-8">
-            Invite your partner to take the quiz and see how your archetypes complement each other.
+            {isLinked
+              ? "See how your archetypes complement each other."
+              : "Send an invite link to your partner. They can sign in with an existing account or create a new one."}
           </p>
 
           {/* ── Linked State ── */}
@@ -270,6 +272,52 @@ export default function PartnerPage() {
                 </p>
               </div>
 
+              {/* Partner's strengths & blind spots */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-5 shadow-sm">
+                  <p className="text-xs font-medium tracking-wide uppercase text-[#4a7c6b] mb-3">
+                    {partnerName ? `${partnerName}'s` : "Their"} strengths
+                  </p>
+                  <ul className="space-y-2">
+                    {partnerArchetype.strengths.map((s) => (
+                      <li key={s} className="text-sm text-[#2d2418] flex items-start gap-2">
+                        <span className="text-[#4a7c6b] shrink-0 mt-0.5">+</span>
+                        {s}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-5 shadow-sm">
+                  <p className="text-xs font-medium tracking-wide uppercase text-[#c45c5c] mb-3">
+                    {partnerName ? `${partnerName}'s` : "Their"} blind spots
+                  </p>
+                  <ul className="space-y-2">
+                    {partnerArchetype.blindSpots.map((b) => (
+                      <li key={b} className="text-sm text-[#2d2418] flex items-start gap-2">
+                        <span className="text-[#c45c5c] shrink-0 mt-0.5">!</span>
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              {/* Partner's growth edge */}
+              <div
+                className="rounded-2xl p-5 shadow-sm"
+                style={{
+                  background: `linear-gradient(135deg, ${partnerArchetype.color}08, ${partnerArchetype.color}15)`,
+                  border: `1px solid ${partnerArchetype.color}20`,
+                }}
+              >
+                <p className="text-xs font-medium tracking-wide uppercase mb-2" style={{ color: partnerArchetype.color }}>
+                  {partnerName ? `${partnerName}'s` : "Their"} growth edge
+                </p>
+                <p className="text-sm text-[#2d2418] leading-relaxed italic">
+                  &ldquo;{partnerArchetype.growthEdge}&rdquo;
+                </p>
+              </div>
+
               <button
                 type="button"
                 onClick={() => router.push("/")}
@@ -328,7 +376,7 @@ export default function PartnerPage() {
                       </button>
                     </div>
                     <p className="text-xs text-[#8a7a66] mt-3">
-                      Share this link with your partner. When they sign up and take the quiz, your profiles will be linked.
+                      Share this link with your partner. They can sign in with an existing account or create a new one. If they haven&apos;t taken the quiz yet, they&apos;ll be guided through it first.
                     </p>
                   </div>
 
