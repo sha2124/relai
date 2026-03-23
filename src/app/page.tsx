@@ -67,36 +67,43 @@ function Landing({ onStart }: { onStart: () => void }) {
   return (
     <div className="bg-gradient-warm">
       {/* ── HERO ── */}
-      <section className="min-h-[90dvh] flex flex-col items-center justify-center px-6 text-center">
-        <div className="max-w-xl">
-          <div className="h-20 w-20 rounded-full bg-gradient-to-br from-[#4a7c6b] to-[#2d4e43] flex items-center justify-center avatar-glow mx-auto mb-8">
+      <section className="min-h-[90dvh] flex flex-col items-center justify-center px-6 text-center relative overflow-hidden">
+        {/* Decorative background orbs */}
+        <div className="absolute top-20 left-10 w-64 h-64 bg-[#4a7c6b]/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-10 w-80 h-80 bg-[#c4849c]/5 rounded-full blur-3xl" />
+
+        <div className="max-w-xl relative z-10 stagger-in">
+          <div className="h-20 w-20 rounded-full bg-gradient-to-br from-[#4a7c6b] to-[#2d4e43] flex items-center justify-center avatar-glow mx-auto mb-8 float">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="text-white">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
+          </div>
+
+          <div className="badge bg-[#d4e6df] text-[#2d4e43] mx-auto mb-6">
+            Free &middot; 5 minutes &middot; No account needed
           </div>
 
           <h1 className="font-heading text-4xl sm:text-5xl font-semibold text-[#1a1008] mb-5 tracking-tight leading-tight">
             Why do you keep having<br />the same fight?
           </h1>
 
-          <p className="text-[#8a7a66] text-base sm:text-lg leading-relaxed mb-10 max-w-md mx-auto">
+          <p className="text-[#6b5b47] text-base sm:text-lg leading-relaxed mb-10 max-w-md mx-auto">
             Find your relationship archetype in 5 minutes. Understand your patterns, find the words, then go have the real conversation.
           </p>
 
-          <button type="button" onClick={onStart} className="rounded-xl bg-gradient-to-r from-[#4a7c6b] to-[#2d4e43] px-10 py-4 text-white font-semibold text-lg hover:shadow-lg transition-all">
+          <button type="button" onClick={onStart} className="rounded-xl bg-gradient-to-r from-[#4a7c6b] to-[#2d4e43] px-10 py-4 text-white font-semibold text-lg btn-glow">
             Discover your archetype
           </button>
-          <p className="text-xs text-[#c4bbaf] mt-4">Free &middot; No account required &middot; 5 minutes</p>
 
-          <div className="mt-16 grid grid-cols-3 gap-6 text-center">
+          <div className="mt-16 grid grid-cols-3 gap-4 text-center">
             {[
               { emoji: "\uD83D\uDD17", text: "Your attachment\nstyle" },
               { emoji: "\uD83D\uDCAC", text: "How you\ncommunicate" },
               { emoji: "\u2764\uFE0F", text: "What you\nneed in love" },
             ].map((item) => (
-              <div key={item.emoji}>
-                <p className="text-2xl mb-1">{item.emoji}</p>
-                <p className="text-xs text-[#8a7a66] leading-snug whitespace-pre-line">{item.text}</p>
+              <div key={item.emoji} className="glass-card p-4 cursor-default">
+                <p className="text-2xl mb-1.5">{item.emoji}</p>
+                <p className="text-xs text-[#6b5b47] leading-snug whitespace-pre-line font-medium">{item.text}</p>
               </div>
             ))}
           </div>
@@ -104,7 +111,7 @@ function Landing({ onStart }: { onStart: () => void }) {
       </section>
 
       {/* ── HOW IT WORKS ── */}
-      <section className="px-6 py-20 bg-white/40">
+      <section className="px-6 py-20 bg-section-alt">
         <div className="max-w-2xl mx-auto">
           <p className="text-xs tracking-[0.2em] uppercase text-[#4a7c6b] font-medium text-center mb-3">How it works</p>
           <h2 className="font-heading text-2xl sm:text-3xl font-semibold text-[#1a1008] text-center mb-12 tracking-tight">
@@ -191,7 +198,7 @@ function Landing({ onStart }: { onStart: () => void }) {
       </section>
 
       {/* ── WHAT EXPERTS SAY ── */}
-      <section className="px-6 py-20 bg-white/40">
+      <section className="px-6 py-20 bg-section-alt">
         <div className="max-w-2xl mx-auto">
           <p className="text-xs tracking-[0.2em] uppercase text-[#4a7c6b] font-medium text-center mb-3">Grounded in research</p>
           <h2 className="font-heading text-2xl sm:text-3xl font-semibold text-[#1a1008] text-center mb-4 tracking-tight">
@@ -224,7 +231,7 @@ function Landing({ onStart }: { onStart: () => void }) {
                 description: "Expressing needs without blame, hearing others without defensiveness.",
               },
             ].map((item) => (
-              <div key={item.title} className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-5 shadow-sm">
+              <div key={item.title} className="glass-card p-5">
                 <h3 className="text-base font-semibold text-[#1a1008] mb-1">{item.title}</h3>
                 <p className="text-xs text-[#4a7c6b] font-medium mb-2">{item.author}</p>
                 <p className="text-sm text-[#8a7a66] leading-relaxed">{item.description}</p>
@@ -251,7 +258,7 @@ function Landing({ onStart }: { onStart: () => void }) {
                 role: "Creator of Emotionally Focused Therapy",
               },
             ].map((item) => (
-              <div key={item.author} className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-5 shadow-sm">
+              <div key={item.author} className="glass-card p-5">
                 <p className="font-heading text-[#2d2418] text-base italic leading-relaxed mb-3">&ldquo;{item.quote}&rdquo;</p>
                 <p className="text-sm font-semibold text-[#1a1008]">{item.author}</p>
                 <p className="text-xs text-[#8a7a66]">{item.role}</p>
@@ -296,7 +303,7 @@ function Landing({ onStart }: { onStart: () => void }) {
                 archetype: "The Tender Heart",
               },
             ].map((item) => (
-              <div key={item.name} className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-6 shadow-sm">
+              <div key={item.name} className="glass-card p-6">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="text-[10px] tracking-wider uppercase font-medium text-[#4a7c6b] bg-[#d4e6df] px-2 py-0.5 rounded-full">
                     {item.archetype}
@@ -314,7 +321,7 @@ function Landing({ onStart }: { onStart: () => void }) {
       </section>
 
       {/* ── FAQ ── */}
-      <section className="px-6 py-20 bg-white/40">
+      <section className="px-6 py-20 bg-section-alt">
         <div className="max-w-2xl mx-auto">
           <p className="text-xs tracking-[0.2em] uppercase text-[#4a7c6b] font-medium text-center mb-3">Common questions</p>
           <h2 className="font-heading text-2xl sm:text-3xl font-semibold text-[#1a1008] text-center mb-12 tracking-tight">
@@ -344,7 +351,7 @@ function Landing({ onStart }: { onStart: () => void }) {
                 a: "Yes! Each partner takes the quiz separately and gets their own archetype. Comparing results side by side often sparks the most meaningful conversations. Partner linking is coming soon.",
               },
             ].map((item) => (
-              <div key={item.q} className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-6 shadow-sm">
+              <div key={item.q} className="glass-card p-6">
                 <h3 className="text-base font-semibold text-[#1a1008] mb-2">{item.q}</h3>
                 <p className="text-sm text-[#8a7a66] leading-relaxed">{item.a}</p>
               </div>
@@ -366,7 +373,7 @@ function Landing({ onStart }: { onStart: () => void }) {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {/* Free */}
-            <div className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-6 shadow-sm">
+            <div className="glass-card p-6">
               <p className="text-xs tracking-widest uppercase text-[#8a7a66] font-medium mb-2">Free</p>
               <p className="text-3xl font-semibold text-[#1a1008] mb-1">$0</p>
               <p className="text-xs text-[#8a7a66] mb-6">Forever</p>
@@ -396,7 +403,7 @@ function Landing({ onStart }: { onStart: () => void }) {
             </div>
 
             {/* Premium */}
-            <div className="bg-white/70 backdrop-blur-sm border border-[#e8e4df] rounded-2xl p-6 shadow-sm">
+            <div className="glass-card p-6">
               <p className="text-xs tracking-widest uppercase text-[#8a7a66] font-medium mb-2">Premium</p>
               <p className="text-3xl font-semibold text-[#1a1008] mb-1">$24<span className="text-base font-normal text-[#8a7a66]">/mo</span></p>
               <p className="text-xs text-[#8a7a66] mb-6">For couples</p>
@@ -414,7 +421,7 @@ function Landing({ onStart }: { onStart: () => void }) {
       </section>
 
       {/* ── FINAL CTA ── */}
-      <section className="px-6 py-20 bg-white/40">
+      <section className="px-6 py-20 bg-section-alt">
         <div className="max-w-lg mx-auto text-center">
           <h2 className="font-heading text-2xl sm:text-3xl font-semibold text-[#1a1008] mb-4 tracking-tight">
             Ready to meet your archetype?
@@ -422,7 +429,7 @@ function Landing({ onStart }: { onStart: () => void }) {
           <p className="text-[#8a7a66] mb-8">
             14 questions. 5 minutes. No account needed. Just honesty.
           </p>
-          <button type="button" onClick={onStart} className="rounded-xl bg-gradient-to-r from-[#4a7c6b] to-[#2d4e43] px-10 py-4 text-white font-semibold text-lg hover:shadow-lg transition-all">
+          <button type="button" onClick={onStart} className="rounded-xl bg-gradient-to-r from-[#4a7c6b] to-[#2d4e43] px-10 py-4 text-white font-semibold text-lg btn-glow">
             Discover your archetype
           </button>
         </div>
