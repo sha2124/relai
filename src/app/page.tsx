@@ -112,6 +112,8 @@ function Dashboard({ user, name, archetype }: { user: User; name: string; archet
           <div className="text-2xl font-bold tracking-tight text-primary font-heading">RelAI</div>
           <div className="hidden md:flex items-center space-x-8">
             <button onClick={() => setShowChat(true)} className="font-heading font-medium text-sm tracking-tight text-primary border-b-2 border-primary pb-1">Coach</button>
+            <button onClick={() => router.push("/translate")} className="font-heading font-medium text-sm tracking-tight text-outline hover:text-primary transition-colors">Translate</button>
+            <button onClick={() => router.push("/repair")} className="font-heading font-medium text-sm tracking-tight text-outline hover:text-primary transition-colors">Repair</button>
             <button onClick={() => router.push("/exercises")} className="font-heading font-medium text-sm tracking-tight text-outline hover:text-primary transition-colors">Library</button>
             <button onClick={() => router.push("/journal")} className="font-heading font-medium text-sm tracking-tight text-outline hover:text-primary transition-colors">Journal</button>
             <button onClick={() => router.push("/profile")} className="font-heading font-medium text-sm tracking-tight text-outline hover:text-primary transition-colors">Account</button>
@@ -231,6 +233,46 @@ function Dashboard({ user, name, archetype }: { user: User; name: string; archet
             </button>
           </section>
 
+          {/* ── Relationship Tools ── */}
+          <section className="md:col-span-12">
+            <h2 className="text-2xl font-heading font-bold text-on-surface mb-6">Relationship Tools</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <button
+                type="button"
+                onClick={() => router.push("/translate")}
+                className="bg-surface-container-lowest rounded-2xl p-6 border border-surface-variant text-left card-hover group"
+              >
+                <div className="w-12 h-12 bg-primary-container/30 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-2xl text-primary">translate</span>
+                </div>
+                <h3 className="font-heading font-bold text-on-surface mb-1">Conflict Translator</h3>
+                <p className="text-sm text-on-surface-variant leading-relaxed">Rewrite a heated message using nonviolent communication — before you hit send.</p>
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push("/repair")}
+                className="bg-surface-container-lowest rounded-2xl p-6 border border-surface-variant text-left card-hover group"
+              >
+                <div className="w-12 h-12 bg-secondary-container/30 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-2xl text-secondary">healing</span>
+                </div>
+                <h3 className="font-heading font-bold text-on-surface mb-1">Repair Script</h3>
+                <p className="text-sm text-on-surface-variant leading-relaxed">Get the exact words to say after a fight — personalized to both your archetypes.</p>
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push("/insights")}
+                className="bg-surface-container-lowest rounded-2xl p-6 border border-surface-variant text-left card-hover group"
+              >
+                <div className="w-12 h-12 bg-tertiary-container/30 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-2xl text-tertiary">psychology</span>
+                </div>
+                <h3 className="font-heading font-bold text-on-surface mb-1">Your Patterns</h3>
+                <p className="text-sm text-on-surface-variant leading-relaxed">See what your conversations reveal — recurring themes, growth, and blind spots.</p>
+              </button>
+            </div>
+          </section>
+
           {/* ── Daily Insight (Flo-style rotating content) ── */}
           <section className="md:col-span-12 bg-surface-container-lowest rounded-2xl p-8 border border-surface-variant">
             <DailyInsight />
@@ -346,8 +388,8 @@ function Dashboard({ user, name, archetype }: { user: User; name: string; archet
         <div className="flex justify-around py-2">
           {[
             { icon: "home", label: "Home", active: true, action: () => {} },
-            { icon: "auto_stories", label: "Library", active: false, action: () => router.push("/exercises") },
-            { icon: "edit_note", label: "Journal", active: false, action: () => router.push("/journal") },
+            { icon: "translate", label: "Translate", active: false, action: () => router.push("/translate") },
+            { icon: "healing", label: "Repair", active: false, action: () => router.push("/repair") },
             { icon: "person", label: "Account", active: false, action: () => router.push("/profile") },
           ].map((tab) => (
             <button key={tab.label} onClick={tab.action} className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-colors ${tab.active ? "text-primary" : "text-outline"}`}>

@@ -313,12 +313,15 @@ export function Chat() {
               {showNav && (
                 <div className="absolute right-0 top-full mt-2 w-48 bg-white/95 backdrop-blur-md border border-[#e2dcd1] rounded-xl shadow-lg overflow-hidden z-50 msg-enter">
                   {[
+                    { href: "/", label: "Home", icon: "🏠" },
+                    { href: "/translate", label: "Conflict Translator", icon: "🔄" },
+                    { href: "/repair", label: "Repair Script", icon: "💛" },
+                    { href: "/insights", label: "Your Patterns", icon: "🔍" },
                     { href: "/profile", label: "My Profile", icon: "👤" },
                     { href: "/dashboard", label: "Progress", icon: "📊" },
                     { href: "/journal", label: "Journal", icon: "📓" },
                     { href: "/exercises", label: "Exercises", icon: "🏋️" },
                     { href: "/partner", label: "Partner", icon: "💑" },
-                    { href: "/pricing", label: "Pricing", icon: "💎" },
                     { href: "#save", label: "Save Conversation", icon: "💾" },
                   ].map((item) => (
                     <button
