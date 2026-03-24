@@ -194,6 +194,11 @@ function Dashboard({ user, name, archetype }: { user: User; name: string; archet
             </button>
           </section>
 
+          {/* ── Daily Insight (Flo-style rotating content) ── */}
+          <section className="md:col-span-12 bg-surface-container-lowest rounded-2xl p-8 border border-surface-variant">
+            <DailyInsight />
+          </section>
+
           {/* Warm-up Exercises */}
           <section className="md:col-span-12 bg-surface-container-high rounded-2xl p-10">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10">
@@ -315,6 +320,111 @@ function Dashboard({ user, name, archetype }: { user: User; name: string; archet
           ))}
         </div>
       </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Daily Insight — Flo-style rotating content cards                   */
+/* ------------------------------------------------------------------ */
+
+const DAILY_INSIGHTS = [
+  {
+    type: "Conversation Starter",
+    icon: "chat_bubble",
+    color: "#8d4837",
+    content: "\"What's something I do that makes you feel loved — that you've never told me about?\"",
+    source: "Gottman Love Maps",
+    tip: "Ask this tonight. The answer might surprise you.",
+  },
+  {
+    type: "Relationship Myth",
+    icon: "lightbulb",
+    color: "#6b8f82",
+    content: "Myth: Happy couples don't fight.\nReality: They fight just as much — they just repair faster. It's not about avoiding conflict, it's about what you do in the first 3 minutes and the 20 minutes after.",
+    source: "Gottman Institute — 40 years of research",
+    tip: null,
+  },
+  {
+    type: "Micro-Skill",
+    icon: "psychology",
+    color: "#81502b",
+    content: "Try \"The Story I'm Making Up\" — when you catch yourself assuming your partner's intentions, say: \"The story I'm making up right now is that you don't care about this.\" It's vulnerable AND honest.",
+    source: "Brené Brown — Rising Strong",
+    tip: "This works because it owns your interpretation instead of stating it as fact.",
+  },
+  {
+    type: "Did You Know?",
+    icon: "science",
+    color: "#5c7a9c",
+    content: "Couples who \"turn toward\" each other's bids for connection 86% of the time stayed married. Those who turned toward only 33% of the time divorced. A bid can be as small as \"Look at that bird.\"",
+    source: "Gottman Institute — Bids for Connection",
+    tip: "Today, try to notice 3 bids from your partner and turn toward each one.",
+  },
+  {
+    type: "Partner Challenge",
+    icon: "emoji_events",
+    color: "#c45c5c",
+    content: "The 6-Second Kiss: Tonight, instead of a peck goodbye or goodnight, try a real 6-second kiss. Gottman calls it \"a kiss with potential\" — long enough to feel something, short enough to fit into real life.",
+    source: "Drs. John & Julie Gottman",
+    tip: "6 seconds is longer than you think. Count it.",
+  },
+  {
+    type: "Attachment Insight",
+    icon: "link",
+    color: "#3a6355",
+    content: "When your partner pulls away, your instinct to pursue harder is your attachment system activating — not evidence that something is wrong. The paradox: the security you're seeking can only come from tolerating the uncertainty.",
+    source: "Dr. Stan Tatkin — Wired for Love",
+    tip: "Next time you feel the urge to over-text, pause for 20 minutes first. See what happens.",
+  },
+  {
+    type: "Weekly Win Prompt",
+    icon: "celebration",
+    color: "#8d4837",
+    content: "Name one moment this week where your relationship felt good — even if it was small. Not a grand gesture, but a moment of real connection. A laugh. A look. A hand on the shoulder.",
+    source: "Gottman — Small Things Often",
+    tip: "Write it in your journal. Wins you name are wins you remember.",
+  },
+];
+
+function DailyInsight() {
+  // Rotate daily based on day of year
+  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
+  const insight = DAILY_INSIGHTS[dayOfYear % DAILY_INSIGHTS.length];
+
+  return (
+    <div>
+      <div className="flex items-center gap-3 mb-4">
+        <div
+          className="w-10 h-10 rounded-xl flex items-center justify-center"
+          style={{ background: `${insight.color}15` }}
+        >
+          <span className="material-symbols-outlined" style={{ color: insight.color }}>{insight.icon}</span>
+        </div>
+        <div>
+          <p className="text-xs tracking-widest uppercase font-medium" style={{ color: insight.color }}>
+            {insight.type}
+          </p>
+          <p className="text-[10px] text-on-surface-variant">Updates daily</p>
+        </div>
+      </div>
+
+      <p className="text-on-surface text-base leading-relaxed whitespace-pre-line mb-4">
+        {insight.content}
+      </p>
+
+      <div className="flex items-center justify-between">
+        <p className="text-xs text-on-surface-variant italic">{insight.source}</p>
+      </div>
+
+      {insight.tip && (
+        <div className="mt-4 bg-primary/5 border border-primary/10 rounded-xl px-4 py-3">
+          <p className="text-sm text-on-surface">
+            <span className="font-medium text-primary">Try this: </span>
+            {insight.tip}
+          </p>
+        </div>
+      )}
     </div>
   );
 }
@@ -560,6 +670,103 @@ function Landing({ onStart }: { onStart: () => void }) {
         </div>
       </section>
 
+      {/* ── HOW YOUR COACH WORKS ── */}
+      <section className="px-6 py-20">
+        <div className="max-w-2xl mx-auto">
+          <p className="text-xs tracking-[0.2em] uppercase text-primary font-medium text-center mb-3">Your AI coach</p>
+          <h2 className="font-heading text-2xl sm:text-3xl font-bold text-on-surface text-center mb-4 tracking-tight">
+            Not a generic chatbot. A coach that knows you.
+          </h2>
+          <p className="text-on-surface-variant text-center mb-12 max-w-lg mx-auto leading-relaxed">
+            RelAI learns your patterns, teaches you concrete skills from leading relationship experts, and always pushes you toward real conversations.
+          </p>
+
+          <div className="space-y-4">
+            {[
+              {
+                skill: "The Story I\u2019m Making Up",
+                expert: "Bren\u00e9 Brown",
+                description: "When you\u2019re catastrophizing about your partner\u2019s intentions, your coach teaches you to say: \u201CThe story I\u2019m making up is that you don\u2019t care about this\u201D \u2014 honest about your fear while admitting you might be wrong.",
+              },
+              {
+                skill: "The Attachment Question",
+                expert: "Dr. Sue Johnson",
+                description: "Every fight is really asking: \u201CAre you there for me?\u201D Your coach helps you find the real question underneath the surface argument about dishes or money.",
+              },
+              {
+                skill: "Small Things Often",
+                expert: "Drs. John & Julie Gottman",
+                description: "Your coach tracks your daily check-ins and nudges you toward the micro-gestures that predict relationship success: a 6-second kiss, a specific appreciation, turning toward a bid.",
+              },
+              {
+                skill: "Becoming an Expert on Your Partner",
+                expert: "Dr. Stan Tatkin",
+                description: "Your coach helps you build an \u201Cowner\u2019s manual\u201D for your partner \u2014 what soothes them, what triggers them, what they need in the first 30 seconds when you walk in the door.",
+              },
+            ].map((item) => (
+              <div key={item.skill} className="glass-card p-5">
+                <div className="flex items-center gap-2 mb-2">
+                  <h3 className="text-base font-semibold text-on-surface">{item.skill}</h3>
+                  <span className="text-[10px] tracking-wider uppercase font-medium text-primary bg-primary-container/30 px-2 py-0.5 rounded-full whitespace-nowrap">
+                    {item.expert}
+                  </span>
+                </div>
+                <p className="text-sm text-on-surface-variant leading-relaxed">{item.description}</p>
+              </div>
+            ))}
+          </div>
+
+          <p className="text-center text-xs text-on-surface-variant mt-8">
+            Every coaching response is grounded in peer-reviewed research — never generic advice.
+          </p>
+        </div>
+      </section>
+
+      {/* ── DAILY PRACTICE (Flo-style engagement hook) ── */}
+      <section className="px-6 py-20 bg-section-alt">
+        <div className="max-w-2xl mx-auto">
+          <p className="text-xs tracking-[0.2em] uppercase text-primary font-medium text-center mb-3">Daily practice</p>
+          <h2 className="font-heading text-2xl sm:text-3xl font-bold text-on-surface text-center mb-4 tracking-tight">
+            5 minutes a day that actually change things
+          </h2>
+          <p className="text-on-surface-variant text-center mb-12 max-w-lg mx-auto leading-relaxed">
+            Like a fitness app for your relationship. Log how you&apos;re feeling, get a personalized insight, and try one small thing with your partner.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {[
+              {
+                step: "1",
+                title: "Check in",
+                description: "Rate your connection today. Over time, your coach spots patterns you can\u2019t see yourself.",
+                icon: "wb_sunny",
+              },
+              {
+                step: "2",
+                title: "Get your insight",
+                description: "A daily tip, conversation starter, or micro-skill — personalized to your archetype and current patterns.",
+                icon: "lightbulb",
+              },
+              {
+                step: "3",
+                title: "Try it IRL",
+                description: "Every insight comes with one specific thing to try with your partner today. Not homework — a nudge.",
+                icon: "favorite",
+              },
+            ].map((item) => (
+              <div key={item.step} className="glass-card p-6 text-center">
+                <div className="h-12 w-12 rounded-full bg-primary-container/30 flex items-center justify-center mx-auto mb-4">
+                  <span className="material-symbols-outlined text-primary">{item.icon}</span>
+                </div>
+                <p className="text-[10px] tracking-widest uppercase text-primary font-medium mb-2">Step {item.step}</p>
+                <h3 className="text-base font-semibold text-on-surface mb-2">{item.title}</h3>
+                <p className="text-sm text-on-surface-variant leading-relaxed">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── TESTIMONIALS ── */}
       <section className="px-6 py-20">
         <div className="max-w-2xl mx-auto">
@@ -671,6 +878,49 @@ function Landing({ onStart }: { onStart: () => void }) {
                 <li className="flex gap-2"><span className="text-primary">{"\u2713"}</span> Voice sessions</li>
               </ul>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── TRUST & SAFETY ── */}
+      <section className="px-6 py-20">
+        <div className="max-w-2xl mx-auto">
+          <p className="text-xs tracking-[0.2em] uppercase text-primary font-medium text-center mb-3">Trust &amp; safety</p>
+          <h2 className="font-heading text-2xl sm:text-3xl font-bold text-on-surface text-center mb-12 tracking-tight">
+            Your relationship data is sacred
+          </h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {[
+              {
+                icon: "lock",
+                title: "Private by default",
+                description: "Your conversations, journal entries, and profile are encrypted and private. Your partner cannot see your coach sessions.",
+              },
+              {
+                icon: "shield",
+                title: "Safety guardrails",
+                description: "If our coach detects signs of abuse, crisis, or danger, it immediately provides professional resources — not more advice.",
+              },
+              {
+                icon: "visibility_off",
+                title: "We never sell your data",
+                description: "Your relationship data is never sold, shared with advertisers, or used for anything other than your coaching experience.",
+              },
+              {
+                icon: "health_and_safety",
+                title: "Clear scope boundaries",
+                description: "RelAI is a coaching tool, not therapy. We\u2019re transparent about our limits and will tell you when you need a licensed professional.",
+              },
+            ].map((item) => (
+              <div key={item.title} className="glass-card p-5">
+                <div className="flex items-center gap-3 mb-2">
+                  <span className="material-symbols-outlined text-primary">{item.icon}</span>
+                  <h3 className="text-base font-semibold text-on-surface">{item.title}</h3>
+                </div>
+                <p className="text-sm text-on-surface-variant leading-relaxed">{item.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

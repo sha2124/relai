@@ -12,6 +12,11 @@ export default function ProfilePage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
+  const [bio, setBio] = useState("");
+  const [isPublic, setIsPublic] = useState(false);
+  const [memoryCount, setMemoryCount] = useState(0);
 
   useEffect(() => {
     async function load() {
@@ -34,6 +39,18 @@ export default function ProfilePage() {
                 data.conflict_response.primary
               )
             : undefined;
+
+          setAvatarUrl(data.avatar_url || null);
+          setUsername(data.username || null);
+          setBio(data.bio || "");
+          setIsPublic(data.is_public || false);
+
+          // Get memory count
+          const { count } = await supabase
+            .from("memories")
+            .select("*", { count: "exact", head: true })
+            .eq("user_id", user.id);
+          setMemoryCount(count ?? 0);
 
           setProfile({
             name: data.name,
@@ -89,35 +106,100 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-[100dvh] bg-gradient-warm">
-      {/* ── Archetype Hero ── */}
-      <div className="px-6 pt-12 pb-8">
+      {/* ── Profile Hero ── */}
+      <div className="px-6 pt-8 pb-6">
         <div className="max-w-lg mx-auto text-center stagger-in">
-          {/* Archetype emoji badge */}
+          {/* Edit button */}
+          {isLoggedIn && (
+            <div className="flex justify-end mb-4">
+              <button
+                type="button"
+                onClick={() => router.push("/profile/edit")}
+                className="flex items-center gap-1 text-sm text-[#8d4837] font-medium hover:text-[#6d2e20] transition-colors"
+              >
+                <span className="material-symbols-outlined text-lg">edit</span>
+                Edit
+              </button>
+            </div>
+          )}
+
+          {/* Avatar / Archetype badge */}
+          {avatarUrl ? (
+            <img
+              src={avatarUrl}
+              alt={profile.name}
+              className="w-24 h-24 rounded-full object-cover mx-auto mb-4 shadow-lg border-2 border-white/80"
+            />
+          ) : (
+            <div
+              className="h-24 w-24 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg"
+              style={{
+                background: `linear-gradient(135deg, ${archetype.color}20, ${archetype.color}40)`,
+                border: `2px solid ${archetype.color}30`,
+              }}
+            >
+              <span className="text-4xl">{archetype.emoji}</span>
+            </div>
+          )}
+
+          <h1 className="font-heading text-2xl font-semibold text-[#312e29]">
+            {profile.name}
+          </h1>
+          {username && (
+            <p className="text-sm text-[#7a766f] mt-0.5">@{username}</p>
+          )}
+
+          {/* Archetype badge */}
           <div
-            className="h-24 w-24 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
+            className="inline-flex items-center gap-2 mt-3 px-4 py-2 rounded-full text-sm font-medium"
             style={{
-              background: `linear-gradient(135deg, ${archetype.color}20, ${archetype.color}40)`,
-              border: `2px solid ${archetype.color}30`,
+              background: `${archetype.color}12`,
+              color: archetype.color,
+              border: `1px solid ${archetype.color}25`,
             }}
           >
-            <span className="text-4xl">{archetype.emoji}</span>
+            <span>{archetype.emoji}</span>
+            {archetype.name}
           </div>
 
-          <p className="text-xs tracking-[0.2em] uppercase font-medium mb-3" style={{ color: archetype.color }}>
-            Your relationship archetype
-          </p>
-
-          <h1 className="font-heading text-4xl sm:text-5xl font-semibold text-[#312e29] mb-3 tracking-tight">
-            {archetype.name}
-          </h1>
-
-          <p className="text-lg text-[#7a766f] italic mb-6">
+          <p className="text-sm text-[#7a766f] italic mt-2">
             &ldquo;{archetype.tagline}&rdquo;
           </p>
 
-          <p className="text-[#5e5b54] text-base leading-relaxed max-w-md mx-auto mb-6">
+          {bio && (
+            <p className="text-[#5e5b54] text-base leading-relaxed max-w-sm mx-auto mt-3">
+              {bio}
+            </p>
+          )}
+
+          <p className="text-[#5e5b54] text-sm leading-relaxed max-w-md mx-auto mt-3">
             {archetype.description}
           </p>
+
+          {/* Stats row */}
+          {isLoggedIn && (
+            <div className="flex items-center justify-center gap-6 mt-5">
+              <button
+                type="button"
+                onClick={() => router.push("/profile/memories")}
+                className="text-center hover:opacity-70 transition-opacity"
+              >
+                <p className="text-lg font-semibold text-[#312e29]">{memoryCount}</p>
+                <p className="text-xs text-[#7a766f]">memories</p>
+              </button>
+              <div className="w-px h-8 bg-[#e2dcd1]" />
+              <div className="text-center">
+                <p className="text-lg font-semibold text-[#312e29]">
+                  {isPublic ? (
+                    <span className="material-symbols-outlined text-lg text-[#3a6355]">public</span>
+                  ) : (
+                    <span className="material-symbols-outlined text-lg text-[#b1ada5]">lock</span>
+                  )}
+                </p>
+                <p className="text-xs text-[#7a766f]">{isPublic ? "Public" : "Private"}</p>
+              </div>
+            </div>
+          )}
 
           {/* Share archetype button */}
           <button
@@ -296,6 +378,51 @@ export default function ProfilePage() {
         </div>
       </div>
 
+      {/* ── What to do next ── */}
+      <div className="px-6 pb-6">
+        <div className="max-w-lg mx-auto">
+          <p className="text-xs font-medium tracking-wide uppercase text-[#8d4837] mb-4">What to do with this</p>
+          <div className="space-y-3">
+            {[
+              { text: "Talk to your coach about your growth edge — it\u2019ll ask the right follow-up questions", icon: "chat" },
+              { text: "Share your archetype with your partner and compare — this is where the biggest insights happen", icon: "share" },
+              { text: "Try a guided exercise that targets your blind spots", icon: "fitness_center" },
+            ].map((item) => (
+              <div key={item.icon} className="flex gap-3 items-start bg-white/50 border border-[#e2dcd1] rounded-xl p-4">
+                <span className="material-symbols-outlined text-[#8d4837] text-lg shrink-0 mt-0.5">{item.icon}</span>
+                <p className="text-sm text-[#5e5b54] leading-relaxed">{item.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── Quick Actions ── */}
+      {isLoggedIn && (
+        <div className="px-6 pb-4">
+          <div className="max-w-lg mx-auto grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              onClick={() => router.push("/profile/memories")}
+              className="bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-2xl p-4 flex flex-col items-center gap-2 hover:shadow-md hover:-translate-y-0.5 transition-all"
+            >
+              <span className="material-symbols-outlined text-xl text-[#8d4837]">photo_library</span>
+              <span className="text-sm font-medium text-[#312e29]">Memories</span>
+              <span className="text-xs text-[#7a766f]">Photos & moments</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => router.push("/community")}
+              className="bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-2xl p-4 flex flex-col items-center gap-2 hover:shadow-md hover:-translate-y-0.5 transition-all"
+            >
+              <span className="material-symbols-outlined text-xl text-[#8d4837]">group</span>
+              <span className="text-sm font-medium text-[#312e29]">Community</span>
+              <span className="text-xs text-[#7a766f]">Browse archetypes</span>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* ── CTAs ── */}
       <div className="px-6 pb-20">
         <div className="max-w-lg mx-auto space-y-3">
@@ -325,6 +452,17 @@ export default function ProfilePage() {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
             Invite your partner
           </button>
+
+          {username && isPublic && (
+            <button
+              type="button"
+              onClick={() => router.push(`/u/${username}`)}
+              className="w-full rounded-xl border border-[#e2dcd1] bg-white/60 px-5 py-3.5 text-sm font-medium text-[#8d4837] hover:bg-white transition-all flex items-center justify-center gap-2"
+            >
+              <span className="material-symbols-outlined text-lg">open_in_new</span>
+              View public profile
+            </button>
+          )}
 
           <button
             type="button"

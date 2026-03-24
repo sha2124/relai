@@ -64,7 +64,7 @@ export default function PartnerPage() {
         .eq("user_id", user.id)
         .order("created_at", { ascending: false })
         .limit(1)
-        .single();
+        .maybeSingle();
 
       if (existingLink) {
         setLink(existingLink as PartnerLink);
@@ -93,17 +93,13 @@ export default function PartnerPage() {
 
       // Also check if I'm a partner in someone else's link
       if (!existingLink || existingLink.status === "pending") {
-        const { data: asPartner, error: asPartnerError } = await supabase
+        const { data: asPartner } = await supabase
           .from("partner_links")
-          .select("*, user_id")
+          .select("*")
           .eq("partner_id", user.id)
           .eq("status", "linked")
           .limit(1)
-          .single();
-
-        if (asPartnerError) {
-          console.warn("[partner] asPartner query failed (likely RLS):", asPartnerError.message);
-        }
+          .maybeSingle();
 
         if (asPartner) {
           // Mark as linked so the UI shows the linked state
@@ -385,10 +381,16 @@ export default function PartnerPage() {
                   </div>
 
                   <div className="bg-[#81502b]/5 border border-[#81502b]/15 rounded-2xl p-5">
-                    <p className="text-sm text-[#7a766f] flex items-center gap-2">
+                    <p className="text-sm text-[#7a766f] flex items-center gap-2 mb-4">
                       <span className="inline-block w-2 h-2 rounded-full bg-[#81502b]/40 animate-pulse" />
                       Waiting for your partner to join...
                     </p>
+                    <div className="border-t border-[#81502b]/10 pt-4">
+                      <p className="text-xs font-medium tracking-wide uppercase text-[#81502b] mb-2">What to say when you share it</p>
+                      <p className="text-sm text-[#5e5b54] leading-relaxed italic">
+                        &ldquo;Hey, I took this relationship quiz and my results were really accurate. Want to take it too? We can compare our patterns — it might help us understand each other better.&rdquo;
+                      </p>
+                    </div>
                   </div>
                 </div>
               )}

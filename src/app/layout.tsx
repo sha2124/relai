@@ -15,9 +15,23 @@ const beVietnam = Be_Vietnam_Pro({
 });
 
 export const metadata: Metadata = {
-  title: "RelAI — Your Relationship Coach",
+  title: "RelAI — AI Relationship Coach",
   description:
-    "Understand your relationship patterns in 5 minutes. AI-powered coaching grounded in attachment theory, Gottman research, and real science.",
+    "Why do you keep having the same fight? Find your relationship archetype in 5 minutes. AI coaching grounded in Gottman Method, attachment theory, and EFT.",
+  openGraph: {
+    title: "RelAI — AI Relationship Coach",
+    description:
+      "Find your relationship archetype in 5 minutes. Understand your patterns, find the words, then go have the real conversation.",
+    siteName: "RelAI",
+    type: "website",
+    url: "https://relai-pi.vercel.app",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "RelAI — AI Relationship Coach",
+    description:
+      "Find your relationship archetype in 5 minutes. AI coaching grounded in 40+ years of relationship research.",
+  },
 };
 
 export default function RootLayout({
