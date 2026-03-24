@@ -75,7 +75,25 @@ export default function Home() {
 
 function Dashboard({ user, name, archetype }: { user: User; name: string; archetype: Archetype | null }) {
   const router = useRouter();
-  const [showChat, setShowChat] = useState(false);
+  const [showChat, setShowChat] = useState(() => {
+    if (typeof window !== "undefined" && localStorage.getItem("relai-exercise-prompt")) return true;
+    return false;
+  });
+  const [moodSaved, setMoodSaved] = useState<string | null>(null);
+
+  async function saveMoodCheck(moodLabel: string) {
+    const supabase = createClient();
+    const { data: { user: u } } = await supabase.auth.getUser();
+    if (!u) return;
+    const moodMap: Record<string, string> = { RADIANT: "great", MILD: "good", HAZY: "okay", STORMY: "hard" };
+    await supabase.from("journal_entries").insert({
+      user_id: u.id,
+      content: `Mood check: feeling ${moodLabel.toLowerCase()} today.`,
+      mood: moodMap[moodLabel] || "okay",
+      tags: ["mood-check"],
+    });
+    setMoodSaved(moodLabel);
+  }
 
   if (showChat) return <Chat />;
 
@@ -143,10 +161,13 @@ function Dashboard({ user, name, archetype }: { user: User; name: string; archet
                 ].map((mood) => (
                   <button
                     key={mood.label}
-                    className="flex flex-col items-center justify-center w-24 h-32 bg-surface-container-lowest rounded-xl border-2 border-transparent hover:border-secondary-container transition-all"
+                    onClick={() => saveMoodCheck(mood.label)}
+                    className={`flex flex-col items-center justify-center w-24 h-32 bg-surface-container-lowest rounded-xl border-2 transition-all ${
+                      moodSaved === mood.label ? "border-secondary-container bg-secondary-container/10" : "border-transparent hover:border-secondary-container"
+                    }`}
                   >
                     <span className={`material-symbols-outlined text-3xl mb-3 ${mood.color}`} style={mood.fill ? { fontVariationSettings: "'FILL' 1" } : undefined}>{mood.icon}</span>
-                    <span className="text-xs font-bold tracking-wide">{mood.label}</span>
+                    <span className="text-xs font-bold tracking-wide">{moodSaved === mood.label ? "LOGGED ✓" : mood.label}</span>
                   </button>
                 ))}
               </div>

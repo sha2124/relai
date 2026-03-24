@@ -34,6 +34,7 @@ export default function JournalPage() {
   const [mood, setMood] = useState<string | null>(null);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
 
@@ -73,15 +74,20 @@ export default function JournalPage() {
         .update({ content: content.trim(), mood, tags: selectedTags })
         .eq("id", editingId);
 
-      if (!error) {
-        setEntries((prev) =>
-          prev.map((e) =>
-            e.id === editingId
-              ? { ...e, content: content.trim(), mood, tags: selectedTags }
-              : e
-          )
-        );
+      if (error) {
+        console.error("[journal] Update failed:", error.message);
+        setSaveError("Failed to update entry. Please try again.");
+        setSaving(false);
+        return;
       }
+
+      setEntries((prev) =>
+        prev.map((e) =>
+          e.id === editingId
+            ? { ...e, content: content.trim(), mood, tags: selectedTags }
+            : e
+        )
+      );
     } else {
       const { data, error } = await supabase
         .from("journal_entries")
@@ -94,11 +100,19 @@ export default function JournalPage() {
         .select()
         .single();
 
-      if (!error && data) {
+      if (error) {
+        console.error("[journal] Insert failed:", error.message, error.details, error.hint);
+        setSaveError(`Failed to save entry: ${error.message}`);
+        setSaving(false);
+        return;
+      }
+
+      if (data) {
         setEntries((prev) => [data as JournalEntry, ...prev]);
       }
     }
 
+    setSaveError(null);
     resetForm();
     setSaving(false);
   }
@@ -245,6 +259,11 @@ export default function JournalPage() {
                   ))}
                 </div>
               </div>
+
+              {/* Error */}
+              {saveError && (
+                <p className="text-sm text-[#b41340] mt-3">{saveError}</p>
+              )}
 
               {/* Actions */}
               <div className="flex gap-3 mt-5">
