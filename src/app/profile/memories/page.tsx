@@ -82,10 +82,13 @@ export default function MemoriesPage() {
           .from("memory-photos")
           .upload(path, photoFile);
 
-        if (!uploadError) {
-          const { data: urlData } = supabase.storage.from("memory-photos").getPublicUrl(path);
-          photoUrl = urlData.publicUrl;
+        if (uploadError) {
+          alert("Photo upload failed. Please try again.");
+          setSaving(false);
+          return;
         }
+        const { data: urlData } = supabase.storage.from("memory-photos").getPublicUrl(path);
+        photoUrl = urlData.publicUrl;
       }
 
       if (editingId) {

@@ -1,12 +1,28 @@
 "use client";
 
+import { useMemo } from "react";
+
 interface ChatMessageProps {
   role: "user" | "assistant";
   content: string;
 }
 
+function parseMarkdown(text: string): string {
+  return text
+    // Bold: **text**
+    .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold">$1</strong>')
+    // Italic: *text* (but not inside bold)
+    .replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, '<em>$1</em>')
+    // Bullet points: - text or • text at start of line
+    .replace(/^[-•]\s+(.+)/gm, '<span class="flex gap-2"><span class="shrink-0">•</span><span>$1</span></span>')
+    // Numbered lists: 1. text
+    .replace(/^(\d+)\.\s+(.+)/gm, '<span class="flex gap-2"><span class="shrink-0 font-medium">$1.</span><span>$2</span></span>');
+}
+
 export function ChatMessage({ role, content }: ChatMessageProps) {
   const isUser = role === "user";
+
+  const formattedContent = useMemo(() => parseMarkdown(content), [content]);
 
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-4 msg-enter`}>
@@ -28,7 +44,14 @@ export function ChatMessage({ role, content }: ChatMessageProps) {
             : "bg-white/80 backdrop-blur-sm border border-[#e2dcd1] text-[#312e29] rounded-bl-sm"
         }`}
       >
-        <div className="whitespace-pre-wrap">{content}</div>
+        {isUser ? (
+          <div className="whitespace-pre-wrap">{content}</div>
+        ) : (
+          <div
+            className="whitespace-pre-wrap [&_strong]:font-semibold [&_em]:italic"
+            dangerouslySetInnerHTML={{ __html: formattedContent }}
+          />
+        )}
       </div>
     </div>
   );

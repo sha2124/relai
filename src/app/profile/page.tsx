@@ -109,9 +109,17 @@ export default function ProfilePage() {
       {/* ── Profile Hero ── */}
       <div className="px-6 pt-8 pb-6">
         <div className="max-w-lg mx-auto text-center stagger-in">
-          {/* Edit button */}
-          {isLoggedIn && (
-            <div className="flex justify-end mb-4">
+          {/* Top nav row: Back + Edit */}
+          <div className="flex justify-between items-center mb-4">
+            <button
+              type="button"
+              onClick={() => router.push("/")}
+              className="flex items-center gap-1 text-sm text-[#7a766f] font-medium hover:text-[#312e29] transition-colors"
+            >
+              <span className="material-symbols-outlined text-lg">arrow_back</span>
+              Home
+            </button>
+            {isLoggedIn && (
               <button
                 type="button"
                 onClick={() => router.push("/profile/edit")}
@@ -120,8 +128,8 @@ export default function ProfilePage() {
                 <span className="material-symbols-outlined text-lg">edit</span>
                 Edit
               </button>
-            </div>
-          )}
+            )}
+          </div>
 
           {/* Avatar / Archetype badge */}
           {avatarUrl ? (

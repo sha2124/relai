@@ -132,7 +132,7 @@ export default function EditProfilePage() {
       setTimeout(() => setSaved(false), 2000);
     } catch (err) {
       console.error("Save error:", err);
-      alert("Failed to save. Please try again.");
+      alert(`Failed to save: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setSaving(false);
     }

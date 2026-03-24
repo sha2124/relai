@@ -80,15 +80,20 @@ function Dashboard({ user, name, archetype }: { user: User; name: string; archet
     return false;
   });
   const [moodSaved, setMoodSaved] = useState<string | null>(null);
+  const [pendingMood, setPendingMood] = useState<string | null>(null);
+  const [moodNote, setMoodNote] = useState("");
 
-  async function saveMoodCheck(moodLabel: string) {
+  async function saveMoodCheck(moodLabel: string, note?: string) {
     const supabase = createClient();
     const { data: { user: u } } = await supabase.auth.getUser();
     if (!u) return;
     const moodMap: Record<string, string> = { RADIANT: "great", MILD: "good", HAZY: "okay", STORMY: "hard" };
+    const content = note
+      ? `Mood check: feeling ${moodLabel.toLowerCase()} today. ${note}`
+      : `Mood check: feeling ${moodLabel.toLowerCase()} today.`;
     await supabase.from("journal_entries").insert({
       user_id: u.id,
-      content: `Mood check: feeling ${moodLabel.toLowerCase()} today.`,
+      content,
       mood: moodMap[moodLabel] || "okay",
       tags: ["mood-check"],
     });
@@ -161,9 +166,16 @@ function Dashboard({ user, name, archetype }: { user: User; name: string; archet
                 ].map((mood) => (
                   <button
                     key={mood.label}
-                    onClick={() => saveMoodCheck(mood.label)}
+                    onClick={() => {
+                      if (moodSaved) return;
+                      setPendingMood(mood.label);
+                    }}
                     className={`flex flex-col items-center justify-center w-24 h-32 bg-surface-container-lowest rounded-xl border-2 transition-all ${
-                      moodSaved === mood.label ? "border-secondary-container bg-secondary-container/10" : "border-transparent hover:border-secondary-container"
+                      moodSaved === mood.label
+                        ? "border-secondary-container bg-secondary-container/10"
+                        : pendingMood === mood.label
+                        ? "border-primary bg-primary/5"
+                        : "border-transparent hover:border-secondary-container"
                     }`}
                   >
                     <span className={`material-symbols-outlined text-3xl mb-3 ${mood.color}`} style={mood.fill ? { fontVariationSettings: "'FILL' 1" } : undefined}>{mood.icon}</span>
@@ -171,6 +183,31 @@ function Dashboard({ user, name, archetype }: { user: User; name: string; archet
                   </button>
                 ))}
               </div>
+              {pendingMood && !moodSaved && (
+                <div className="mt-6 bg-surface-container-lowest rounded-xl p-4 border border-surface-variant msg-enter">
+                  <textarea
+                    value={moodNote}
+                    onChange={(e) => setMoodNote(e.target.value.slice(0, 300))}
+                    placeholder="Add a note about how you're feeling... (optional)"
+                    rows={2}
+                    className="w-full resize-none rounded-lg border border-surface-variant bg-transparent px-3 py-2 text-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary transition-colors mb-3"
+                  />
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => { saveMoodCheck(pendingMood, moodNote.trim() || undefined); setPendingMood(null); setMoodNote(""); }}
+                      className="flex-1 bg-primary text-on-primary py-2.5 rounded-lg font-bold text-xs tracking-wide hover:opacity-90 transition-opacity"
+                    >
+                      {moodNote.trim() ? "SAVE WITH NOTE" : "SAVE"}
+                    </button>
+                    <button
+                      onClick={() => { setPendingMood(null); setMoodNote(""); }}
+                      className="px-4 py-2.5 rounded-lg text-xs font-bold text-outline hover:text-on-surface transition-colors"
+                    >
+                      CANCEL
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </section>
 

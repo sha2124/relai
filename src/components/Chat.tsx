@@ -54,6 +54,7 @@ export function Chat() {
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [showCrisis, setShowCrisis] = useState(false);
   const [showNav, setShowNav] = useState(false);
+  const [sessionStart, setSessionStart] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Load profile and conversation history from Supabase
@@ -288,6 +289,19 @@ export function Chat() {
             >
               I need help now
             </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (messages.length > 0) {
+                  setMessages([]);
+                  setSessionStart(messages.length);
+                }
+              }}
+              className="text-xs text-[#7a766f] hover:text-[#312e29] transition-colors flex items-center gap-1"
+            >
+              <span className="material-symbols-outlined text-sm">add_comment</span>
+              New session
+            </button>
             <div className="relative">
               <button
                 type="button"
@@ -305,11 +319,28 @@ export function Chat() {
                     { href: "/exercises", label: "Exercises", icon: "🏋️" },
                     { href: "/partner", label: "Partner", icon: "💑" },
                     { href: "/pricing", label: "Pricing", icon: "💎" },
+                    { href: "#save", label: "Save Conversation", icon: "💾" },
                   ].map((item) => (
                     <button
                       key={item.href}
                       type="button"
-                      onClick={() => { setShowNav(false); router.push(item.href); }}
+                      onClick={() => {
+                        setShowNav(false);
+                        if (item.href === "#save") {
+                          const text = messages.map((m) =>
+                            `${m.role === "user" ? "You" : "RelAI"}: ${m.content}`
+                          ).join("\n\n---\n\n");
+                          const blob = new Blob([`RelAI Conversation — ${new Date().toLocaleDateString()}\n\n${text}`], { type: "text/plain" });
+                          const url = URL.createObjectURL(blob);
+                          const a = document.createElement("a");
+                          a.href = url;
+                          a.download = `relai-conversation-${new Date().toISOString().split("T")[0]}.txt`;
+                          a.click();
+                          URL.revokeObjectURL(url);
+                        } else {
+                          router.push(item.href);
+                        }
+                      }}
                       className="w-full flex items-center gap-3 px-4 py-3 text-sm text-[#312e29] hover:bg-[#f6f0e6] transition-colors text-left"
                     >
                       <span>{item.icon}</span>
@@ -342,6 +373,13 @@ export function Chat() {
           ))}
           {isStreaming && messages[messages.length - 1]?.content === "" && (
             <div className="flex justify-start mb-4 msg-enter">
+              <div className="shrink-0 mr-3 mt-1">
+                <div className="h-7 w-7 rounded-full bg-gradient-to-br from-[#8d4837] to-[#6d2e20] flex items-center justify-center">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className="text-white">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+              </div>
               <div className="bg-white/80 backdrop-blur-sm border border-[#e2dcd1] rounded-2xl rounded-bl-sm px-5 py-3.5 shadow-sm">
                 <div className="flex gap-1.5">
                   <span className="w-2 h-2 bg-[#8d4837] rounded-full typing-dot" />
@@ -349,6 +387,16 @@ export function Chat() {
                   <span className="w-2 h-2 bg-[#8d4837] rounded-full typing-dot" />
                 </div>
               </div>
+            </div>
+          )}
+          {isStreaming && messages[messages.length - 1]?.content !== "" && (
+            <div className="flex items-center gap-2 ml-10 mb-4">
+              <div className="flex gap-1">
+                <span className="w-1.5 h-1.5 bg-[#8d4837]/40 rounded-full typing-dot" />
+                <span className="w-1.5 h-1.5 bg-[#8d4837]/40 rounded-full typing-dot" />
+                <span className="w-1.5 h-1.5 bg-[#8d4837]/40 rounded-full typing-dot" />
+              </div>
+              <span className="text-[11px] text-[#b1ada5] italic">still composing...</span>
             </div>
           )}
         </div>
