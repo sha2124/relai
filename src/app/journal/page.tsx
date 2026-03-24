@@ -272,7 +272,7 @@ export default function JournalPage() {
 
           {/* ── New Entry Form ── */}
           {showForm && (
-            <div className="bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-2xl p-6 shadow-sm mb-6 msg-enter">
+            <div className="glass-card p-6 mb-6 animate-scale-in">
               <p className="text-xs font-medium tracking-wide uppercase text-[#8d4837] mb-4">
                 {editingId ? "Edit moment" : "What\u2019s on your heart?"}
               </p>
@@ -407,9 +407,12 @@ export default function JournalPage() {
 
           {/* ── Entries ── */}
           {entries.length === 0 && !showForm ? (
-            <div className="text-center py-16">
-              <div className="h-20 w-20 rounded-full bg-[#8d4837]/10 flex items-center justify-center mx-auto mb-5">
-                <span className="material-symbols-outlined text-4xl text-[#8d4837]">auto_stories</span>
+            <div className="text-center py-16 animate-fade-up">
+              <div className="relative mx-auto mb-5 w-20 h-20">
+                <div className="absolute inset-0 rounded-full bg-[#8d4837]/10 blur-xl scale-125" />
+                <div className="relative h-20 w-20 rounded-full bg-[#8d4837]/10 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-4xl text-[#8d4837]">auto_stories</span>
+                </div>
               </div>
               <h3 className="font-heading text-xl font-semibold text-[#312e29] mb-2">
                 Your story starts here
@@ -449,7 +452,7 @@ export default function JournalPage() {
               </div>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-4 stagger-children">
               {entries.map((entry) => {
                 const moodInfo = MOODS.find((m) => m.value === entry.mood);
                 const displayDate = entry.entry_date
@@ -458,7 +461,7 @@ export default function JournalPage() {
                 return (
                   <div
                     key={entry.id}
-                    className="bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-2xl shadow-sm group overflow-hidden"
+                    className="glass-card card-hover group overflow-hidden"
                   >
                     {/* Photo */}
                     {entry.photo_url && (
@@ -471,10 +474,11 @@ export default function JournalPage() {
 
                     <div className="p-5">
                       <div className="flex items-start justify-between mb-3">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2.5">
                           {moodInfo && (
-                            <span className="text-sm" title={moodInfo.label}>
-                              {moodInfo.emoji}
+                            <span className="inline-flex items-center gap-1.5 bg-[#8d4837]/[0.07] px-2 py-0.5 rounded-full" title={moodInfo.label}>
+                              <span className="text-sm">{moodInfo.emoji}</span>
+                              <span className="text-[10px] font-medium text-[#8d4837]">{moodInfo.label}</span>
                             </span>
                           )}
                           <span className="text-xs text-[#7a766f]">

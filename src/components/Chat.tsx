@@ -265,7 +265,7 @@ export function Chat() {
   return (
     <div className="flex flex-col h-[100dvh] bg-gradient-warm">
       {/* Header */}
-      <header className="shrink-0 bg-white/60 backdrop-blur-md border-b border-[#e2dcd1]/60 px-6 py-3.5">
+      <header className="shrink-0 glass-white border-b border-[#e2dcd1]/60 px-6 py-3.5">
         <div className="max-w-2xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="relative">
@@ -365,7 +365,7 @@ export function Chat() {
       </header>
 
       {/* Messages */}
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-6 chat-scroll">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto px-6 py-6 premium-scroll">
         <div className="max-w-2xl mx-auto">
           {messages.length === 0 && <EmptyState onSelect={handleSend} name={userName} />}
           {messages.map((msg, i) => (
@@ -511,10 +511,12 @@ const STARTERS = [
 
 function EmptyState({ onSelect, name }: { onSelect: (msg: string) => void; name: string }) {
   return (
-    <div className="flex flex-col items-center justify-center py-16 sm:py-24 text-center">
+    <div className="flex flex-col items-center justify-center py-16 sm:py-24 text-center animate-fade-up">
       {/* Logo */}
       <div className="relative mb-8">
-        <div className="h-20 w-20 rounded-full bg-gradient-to-br from-[#8d4837] to-[#6d2e20] flex items-center justify-center avatar-glow">
+        {/* Subtle gradient glow behind avatar */}
+        <div className="absolute inset-0 w-20 h-20 rounded-full bg-[#8d4837]/10 blur-xl scale-150" />
+        <div className="relative h-20 w-20 rounded-full bg-gradient-to-br from-[#8d4837] to-[#6d2e20] flex items-center justify-center avatar-glow">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="text-white">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
@@ -522,6 +524,7 @@ function EmptyState({ onSelect, name }: { onSelect: (msg: string) => void; name:
       </div>
 
       {/* Welcome text */}
+
       <h2 className="text-2xl sm:text-3xl font-semibold text-[#312e29] mb-3 tracking-tight">
         {name ? `Hey ${name}, I\u2019m RelAI.` : "Hey, I\u2019m RelAI."}
       </h2>
@@ -532,13 +535,13 @@ function EmptyState({ onSelect, name }: { onSelect: (msg: string) => void; name:
       </p>
 
       {/* Starter prompts */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-lg">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-lg stagger-children">
         {STARTERS.map(({ emoji, label, prompt }) => (
           <button
             key={label}
             type="button"
             onClick={() => onSelect(prompt)}
-            className="starter-prompt flex items-center gap-3 text-left bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-xl px-4 py-3.5 hover:bg-white hover:border-[#b1ada5] group"
+            className="card-hover flex items-center gap-3 text-left bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-xl px-4 py-3.5 hover:bg-white hover:border-[#b1ada5] group"
           >
             <span className="text-lg shrink-0">{emoji}</span>
             <span className="text-sm text-[#312e29] font-medium group-hover:text-[#312e29] transition-colors">

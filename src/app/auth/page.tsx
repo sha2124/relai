@@ -79,15 +79,20 @@ function AuthForm() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-gradient-warm flex items-center justify-center px-6">
-      <div className="w-full max-w-sm">
+    <div className="min-h-[100dvh] bg-gradient-warm flex items-center justify-center px-6 relative overflow-hidden">
+      {/* Decorative background orbs */}
+      <div className="absolute top-[-10%] left-[-5%] w-72 h-72 rounded-full bg-[#8d4837]/[0.04] blur-3xl orb-drift-1 pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-5%] w-80 h-80 rounded-full bg-[#705900]/[0.04] blur-3xl orb-drift-2 pointer-events-none" />
+
+      <div className="w-full max-w-sm relative z-10 animate-fade-up">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="h-16 w-16 rounded-full bg-gradient-to-br from-[#8d4837] to-[#6d2e20] flex items-center justify-center avatar-glow mx-auto mb-4">
+          <div className="h-16 w-16 rounded-full bg-gradient-to-br from-[#8d4837] to-[#6d2e20] flex items-center justify-center avatar-glow mx-auto mb-4 animate-float">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-white">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
+          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[#8d4837] mb-3">RelAI</p>
           <h1 className="font-heading text-2xl font-semibold text-[#312e29] tracking-tight">
             {isPartnerInvite
               ? "Join your partner"
@@ -100,10 +105,13 @@ function AuthForm() {
                 ? "Sign in to continue your coaching"
                 : "Create a free account to unlock your AI coach"}
           </p>
+          <p className="text-xs text-[#b1ada5] mt-3 italic leading-relaxed max-w-[280px] mx-auto">
+            Understand your patterns. Find the words.<br />Have the real conversation.
+          </p>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="glass-card p-6 space-y-4">
           <div>
             <label htmlFor="email" className="block text-xs font-medium text-[#312e29] mb-1.5">
               Email
@@ -144,15 +152,20 @@ function AuthForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-xl bg-gradient-to-r from-[#8d4837] to-[#6d2e20] px-5 py-3.5 text-white font-semibold text-sm hover:shadow-md transition-all disabled:opacity-50"
+            className="w-full rounded-xl bg-gradient-to-r from-[#8d4837] to-[#6d2e20] px-5 py-3.5 text-white font-semibold text-sm btn-glow disabled:opacity-50"
           >
-            {loading ? "..." : isLogin ? "Sign in" : "Create free account"}
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                <span>{isLogin ? "Signing in..." : "Creating account..."}</span>
+              </span>
+            ) : isLogin ? "Sign in" : "Create free account"}
           </button>
         </form>
 
         {/* What you get */}
         {!isLogin && (
-          <div className="mt-6 bg-white/50 border border-[#e2dcd1] rounded-xl p-4">
+          <div className="mt-6 glass-warm rounded-xl p-4">
             <p className="text-xs font-medium text-[#8d4837] mb-2">Free account includes:</p>
             <ul className="space-y-1.5 text-xs text-[#5e5b54]">
               <li className="flex gap-2"><span className="text-[#8d4837]">&#10003;</span> Your archetype saved permanently</li>
@@ -187,7 +200,8 @@ function AuthForm() {
         </p>
 
         {/* Privacy note */}
-        <p className="text-center text-[10px] text-[#b1ada5] mt-6">
+        <p className="text-center text-[10px] text-[#b1ada5] mt-6 flex items-center justify-center gap-1">
+          <span className="material-symbols-outlined text-xs" style={{ fontSize: '12px' }}>lock</span>
           Your data stays private. We never sell or share your relationship data.
         </p>
       </div>
