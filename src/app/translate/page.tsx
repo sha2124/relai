@@ -133,11 +133,11 @@ export default function TranslatePage() {
 
   function handlePractice() {
     if (!result) return;
-    // Navigate to chat with translated message as context
-    const contextMsg = encodeURIComponent(
+    localStorage.setItem(
+      "relai-exercise-prompt",
       `I just used the Conflict Translator. Here's what I wanted to say:\n\n"${original.trim()}"\n\nThe translated version:\n\n"${result.translated}"\n\nCan you help me practice saying this in my own words?`
     );
-    window.location.href = `/?starter=${contextMsg}`;
+    window.location.href = "/";
   }
 
   return (

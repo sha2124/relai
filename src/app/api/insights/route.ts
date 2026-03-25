@@ -5,7 +5,7 @@ const client = new OpenAI({
   apiKey: process.env.OPENROUTER_API_KEY,
 });
 
-const MODEL = "moonshotai/kimi-k2.5";
+const MODEL = "anthropic/claude-sonnet-4";
 
 interface Message {
   role: string;

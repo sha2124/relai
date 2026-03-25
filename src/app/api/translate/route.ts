@@ -7,7 +7,7 @@ function getClient() {
   });
 }
 
-const MODEL = "moonshotai/kimi-k2.5";
+const MODEL = "anthropic/claude-sonnet-4";
 
 interface TranslateRequest {
   original: string;
