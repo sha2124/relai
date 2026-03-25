@@ -319,7 +319,10 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* ── Quick Links ── */}
+          {/* ── Relationship Tools ── */}
+          <p className="text-xs font-medium tracking-wide uppercase text-[#8d4837] mb-3">
+            Relationship Tools
+          </p>
           <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
@@ -338,6 +341,24 @@ export default function DashboardPage() {
               <span className="text-xl mb-2 block">🏋️</span>
               <p className="text-sm font-semibold text-[#312e29]">Exercises</p>
               <p className="text-xs text-[#7a766f]">Practice a skill</p>
+            </button>
+            <button
+              type="button"
+              onClick={() => router.push("/mediate")}
+              className="bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-2xl p-4 shadow-sm text-left hover:bg-white hover:shadow-md transition-all"
+            >
+              <span className="text-xl mb-2 block">{"\uD83D\uDD4A\uFE0F"}</span>
+              <p className="text-sm font-semibold text-[#312e29]">Mediated Session</p>
+              <p className="text-xs text-[#7a766f]">Guided couple conversation</p>
+            </button>
+            <button
+              type="button"
+              onClick={() => router.push("/partner")}
+              className="bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-2xl p-4 shadow-sm text-left hover:bg-white hover:shadow-md transition-all"
+            >
+              <span className="text-xl mb-2 block">💑</span>
+              <p className="text-sm font-semibold text-[#312e29]">Partner</p>
+              <p className="text-xs text-[#7a766f]">Link & compare</p>
             </button>
           </div>
         </div>

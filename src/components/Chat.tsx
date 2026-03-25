@@ -353,6 +353,8 @@ export function Chat() {
                     { href: "/journal", label: "Journal", icon: "📓" },
                     { href: "/exercises", label: "Exercises", icon: "🏋️" },
                     { href: "/partner", label: "Partner", icon: "💑" },
+                    { href: "/partner-bridge", label: "Partner Bridge", icon: "🌉" },
+                    { href: "/mediate", label: "Mediated Session", icon: "🕊️" },
                     { href: "#save", label: "Save Conversation", icon: "💾" },
                   ].map((item) => (
                     <button

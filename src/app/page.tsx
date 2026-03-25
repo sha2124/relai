@@ -304,6 +304,17 @@ function Dashboard({ user, name, archetype }: { user: User; name: string; archet
                 <h3 className="font-heading font-bold text-on-surface mb-1">Daily Nudges</h3>
                 <p className="text-sm text-on-surface-variant leading-relaxed">Personalized follow-ups, check-ins, and encouragement based on your activity.</p>
               </button>
+              <button
+                type="button"
+                onClick={() => router.push("/partner-bridge")}
+                className="bg-surface-container-lowest rounded-2xl p-6 border border-surface-variant text-left card-hover group"
+              >
+                <div className="w-12 h-12 bg-primary-container/30 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-2xl text-primary">diversity_1</span>
+                </div>
+                <h3 className="font-heading font-bold text-on-surface mb-1">Partner Bridge</h3>
+                <p className="text-sm text-on-surface-variant leading-relaxed">AI-powered couple insights — shared strengths, tension points, and growth opportunities.</p>
+              </button>
             </div>
           </section>
 
