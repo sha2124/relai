@@ -6,6 +6,7 @@ import { Chat } from "@/components/Chat";
 import { createClient } from "@/lib/supabase/client";
 import { getArchetype, type Archetype } from "@/lib/quiz/archetypes";
 import NudgeBell from "@/components/NudgeBell";
+import { SafetyBanner } from "@/components/SafetyBanner";
 import type { User } from "@supabase/supabase-js";
 
 export default function Home() {
@@ -144,6 +145,8 @@ function Dashboard({ user, name, archetype }: { user: User; name: string; archet
           </div>
         </div>
       </nav>
+
+      <SafetyBanner />
 
       <main className="max-w-7xl mx-auto px-6 md:px-12 pt-12">
         {/* ── Hero ── */}
