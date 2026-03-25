@@ -356,9 +356,27 @@ export default function DashboardPage() {
               onClick={() => router.push("/partner")}
               className="bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-2xl p-4 shadow-sm text-left hover:bg-white hover:shadow-md transition-all"
             >
-              <span className="text-xl mb-2 block">💑</span>
+              <span className="text-xl mb-2 block">{"\u{1F491}"}</span>
               <p className="text-sm font-semibold text-[#312e29]">Partner</p>
               <p className="text-xs text-[#7a766f]">Link & compare</p>
+            </button>
+            <button
+              type="button"
+              onClick={() => router.push("/conflict-detection")}
+              className="bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-2xl p-4 shadow-sm text-left hover:bg-white hover:shadow-md transition-all"
+            >
+              <span className="material-symbols-outlined text-xl mb-2 block text-[#8d4837]">crisis_alert</span>
+              <p className="text-sm font-semibold text-[#312e29]">Conflict Map</p>
+              <p className="text-xs text-[#7a766f]">Map conflict patterns</p>
+            </button>
+            <button
+              type="button"
+              onClick={() => router.push("/check-ins")}
+              className="bg-white/70 backdrop-blur-sm border border-[#e2dcd1] rounded-2xl p-4 shadow-sm text-left hover:bg-white hover:shadow-md transition-all"
+            >
+              <span className="material-symbols-outlined text-xl mb-2 block text-[#8d4837]">task_alt</span>
+              <p className="text-sm font-semibold text-[#312e29]">Commitments</p>
+              <p className="text-xs text-[#7a766f]">Track follow-through</p>
             </button>
           </div>
         </div>

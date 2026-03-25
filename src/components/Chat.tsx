@@ -348,13 +348,16 @@ export function Chat() {
                     { href: "/insights", label: "Your Patterns", icon: "🔍" },
                     { href: "/health-score", label: "Health Score", icon: "💚" },
                     { href: "/nudges", label: "Nudges", icon: "🔔" },
+                    { href: "/check-ins", label: "Commitments", icon: "✅" },
                     { href: "/profile", label: "My Profile", icon: "👤" },
                     { href: "/dashboard", label: "Progress", icon: "📊" },
                     { href: "/journal", label: "Journal", icon: "📓" },
                     { href: "/exercises", label: "Exercises", icon: "🏋️" },
                     { href: "/partner", label: "Partner", icon: "💑" },
-                    { href: "/partner-bridge", label: "Partner Bridge", icon: "🌉" },
+                    { href: "/partner-bridge", label: "Partner Bridge", icon: "\u{1F309}" },
+                    { href: "/conflict-detection", label: "Conflict Map", icon: "\u26A1" },
                     { href: "/mediate", label: "Mediated Session", icon: "🕊️" },
+                    { href: "/safety", label: "Safety Check", icon: "🛡️" },
                     { href: "#save", label: "Save Conversation", icon: "💾" },
                   ].map((item) => (
                     <button
