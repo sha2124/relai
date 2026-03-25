@@ -81,6 +81,13 @@ function Dashboard({ user, name, archetype }: { user: User; name: string; archet
   });
   const [moodSaved, setMoodSaved] = useState<string | null>(null);
   const [pendingMood, setPendingMood] = useState<string | null>(null);
+
+  // Check for pending exercise/tool prompt on mount (handles full-page navigations)
+  useEffect(() => {
+    if (typeof window !== "undefined" && localStorage.getItem("relai-exercise-prompt") && !showChat) {
+      setShowChat(true);
+    }
+  }, [showChat]);
   const [moodNote, setMoodNote] = useState("");
 
   async function saveMoodCheck(moodLabel: string, note?: string) {

@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface Change {
   original_phrase: string;
@@ -68,6 +69,7 @@ function highlightPhrases(text: string, phrases: string[], className: string) {
 }
 
 export default function TranslatePage() {
+  const router = useRouter();
   const [original, setOriginal] = useState("");
   const [context, setContext] = useState<"sending" | "received">("sending");
   const [result, setResult] = useState<TranslateResult | null>(null);
