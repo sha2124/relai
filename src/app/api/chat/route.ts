@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     const stream = await client.chat.completions.create({
       model: MODEL,
       stream: true,
-      max_tokens: 1024,
+      max_tokens: 2048,
       messages: [
         { role: "system", content: systemPrompt },
         ...recentMessages.map((m: { role: string; content: string }) => ({

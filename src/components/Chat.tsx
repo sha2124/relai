@@ -193,6 +193,7 @@ export function Chat() {
     // Save user message to DB
     saveMessage("user", content);
 
+    // Show typing indicator
     setMessages([...updatedMessages, { role: "assistant", content: "" }]);
 
     try {
@@ -208,8 +209,9 @@ export function Chat() {
 
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
-      let assistantContent = "";
+      let fullContent = "";
 
+      // Stream into a single bubble first
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
@@ -222,10 +224,10 @@ export function Chat() {
             try {
               const data = JSON.parse(line.slice(6));
               if (data.text) {
-                assistantContent += data.text;
+                fullContent += data.text;
                 setMessages([
                   ...updatedMessages,
-                  { role: "assistant", content: assistantContent },
+                  { role: "assistant", content: fullContent },
                 ]);
               }
             } catch {
@@ -235,9 +237,23 @@ export function Chat() {
         }
       }
 
-      // Save assistant message to DB
-      if (assistantContent) {
-        saveMessage("assistant", assistantContent);
+      // Once streaming is done, split into staggered paragraph bubbles
+      if (fullContent) {
+        const paragraphs = fullContent
+          .split(/\n\n+/)
+          .map((p) => p.trim())
+          .filter((p) => p.length > 0);
+
+        if (paragraphs.length > 1) {
+          // Show paragraphs as separate bubbles with staggered animation
+          const staggeredMessages: Message[] = [...updatedMessages];
+          for (let i = 0; i < paragraphs.length; i++) {
+            staggeredMessages.push({ role: "assistant", content: paragraphs[i] });
+          }
+          setMessages(staggeredMessages);
+        }
+        // Save full content as single message to DB (for context continuity)
+        saveMessage("assistant", fullContent);
       }
     } catch (err) {
       console.error("Chat error:", err);
