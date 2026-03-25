@@ -292,7 +292,12 @@ export default function NudgesPage() {
 
   function handleAction(nudge: Nudge) {
     markAsRead(nudge.id);
-    if (nudge.action_url) {
+    if (nudge.action_type === "chat") {
+      // Set a prompt so the chat opens and sends the nudge context
+      const prompt = nudge.content;
+      localStorage.setItem("relai-exercise-prompt", prompt);
+      router.push("/");
+    } else if (nudge.action_url) {
       router.push(nudge.action_url);
     }
   }
