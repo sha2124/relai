@@ -184,6 +184,10 @@ export function Chat() {
     handleSend(content);
   };
 
+  function delay(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   async function handleSend(content: string) {
     const userMessage: Message = { role: "user", content };
     const updatedMessages = [...messages, userMessage];
@@ -211,7 +215,7 @@ export function Chat() {
       const decoder = new TextDecoder();
       let fullContent = "";
 
-      // Stream into a single bubble first
+      // Collect the full response (hidden from user during this phase — they see typing dots)
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
@@ -225,10 +229,6 @@ export function Chat() {
               const data = JSON.parse(line.slice(6));
               if (data.text) {
                 fullContent += data.text;
-                setMessages([
-                  ...updatedMessages,
-                  { role: "assistant", content: fullContent },
-                ]);
               }
             } catch {
               // Skip malformed chunks
@@ -237,21 +237,34 @@ export function Chat() {
         }
       }
 
-      // Once streaming is done, split into staggered paragraph bubbles
+      // Now deliver paragraphs one by one with human-like pauses
       if (fullContent) {
         const paragraphs = fullContent
           .split(/\n\n+/)
           .map((p) => p.trim())
           .filter((p) => p.length > 0);
 
-        if (paragraphs.length > 1) {
-          // Show paragraphs as separate bubbles with staggered animation
-          const staggeredMessages: Message[] = [...updatedMessages];
-          for (let i = 0; i < paragraphs.length; i++) {
-            staggeredMessages.push({ role: "assistant", content: paragraphs[i] });
+        const delivered: Message[] = [...updatedMessages];
+
+        for (let i = 0; i < paragraphs.length; i++) {
+          // Show typing dots before each paragraph (like a human composing)
+          if (i > 0) {
+            setMessages([...delivered, { role: "assistant", content: "" }]);
+            // Human-like pause: shorter for short paragraphs, longer for longer ones
+            const pauseMs = Math.min(600 + paragraphs[i].length * 4, 2000);
+            await delay(pauseMs);
           }
-          setMessages(staggeredMessages);
+
+          // Reveal this paragraph
+          delivered.push({ role: "assistant", content: paragraphs[i] });
+          setMessages([...delivered]);
+
+          // Brief pause after each bubble appears
+          if (i < paragraphs.length - 1) {
+            await delay(300);
+          }
         }
+
         // Save full content as single message to DB (for context continuity)
         saveMessage("assistant", fullContent);
       }
