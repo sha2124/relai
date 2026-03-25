@@ -71,14 +71,21 @@ What I want to happen: ${goal}`;
       ],
     });
 
-    const raw = response.choices[0]?.message?.content?.trim() ?? "";
+    const msg = response.choices[0]?.message;
+    const raw = (msg?.content || (msg as unknown as { reasoning: string })?.reasoning || "").trim();
 
-    // Strip markdown code fences if the model wraps them
-    const cleaned = raw.replace(/^```(?:json)?\s*/, "").replace(/\s*```$/, "");
+    // Extract JSON from response
+    let jsonStr = raw;
+    const fenceMatch = jsonStr.match(/```(?:json)?\s*([\s\S]*?)```/);
+    if (fenceMatch) jsonStr = fenceMatch[1].trim();
+    if (!jsonStr.startsWith("{")) {
+      const objMatch = jsonStr.match(/\{[\s\S]*\}/);
+      if (objMatch) jsonStr = objMatch[0];
+    }
 
     let parsed;
     try {
-      parsed = JSON.parse(cleaned);
+      parsed = JSON.parse(jsonStr);
     } catch {
       console.error("[repair] Failed to parse AI response:", raw);
       return Response.json(

@@ -105,13 +105,21 @@ Analyze this data and return a JSON array of 5-7 insights.`;
       ],
     });
 
-    const raw = response.choices[0]?.message?.content ?? "[]";
+    const msg = response.choices[0]?.message;
+    const raw = (msg?.content || (msg as unknown as { reasoning: string })?.reasoning || "[]").trim();
 
-    // Try to parse the JSON — strip markdown fences if present
+    // Extract JSON from response
+    let jsonStr = raw;
+    const fenceMatch = jsonStr.match(/```(?:json)?\s*([\s\S]*?)```/);
+    if (fenceMatch) jsonStr = fenceMatch[1].trim();
+    if (!jsonStr.startsWith("[") && !jsonStr.startsWith("{")) {
+      const arrMatch = jsonStr.match(/\[[\s\S]*\]/);
+      if (arrMatch) jsonStr = arrMatch[0];
+    }
+
     let insights;
     try {
-      const cleaned = raw.replace(/```(?:json)?\s*/g, "").replace(/```\s*/g, "").trim();
-      insights = JSON.parse(cleaned);
+      insights = JSON.parse(jsonStr);
     } catch {
       console.error("[insights] Failed to parse AI response:", raw);
       return Response.json(

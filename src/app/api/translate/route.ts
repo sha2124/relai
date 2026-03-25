@@ -118,7 +118,11 @@ export async function POST(request: Request) {
       ],
     });
 
-    const raw = completion.choices[0]?.message?.content;
+    const message = completion.choices[0]?.message;
+    // Kimi K2.5 sometimes puts the response in reasoning instead of content
+    const raw = message?.content
+      || (message as unknown as { reasoning: string })?.reasoning
+      || null;
 
     if (!raw) {
       return Response.json(
@@ -127,15 +131,22 @@ export async function POST(request: Request) {
       );
     }
 
-    // Parse JSON — strip any accidental markdown fences
-    const cleaned = raw
-      .replace(/^```(?:json)?\s*/i, "")
-      .replace(/\s*```\s*$/, "")
-      .trim();
+    // Parse JSON — extract from markdown fences or find JSON object in text
+    let jsonStr = raw.trim();
+    // Strip markdown fences
+    const fenceMatch = jsonStr.match(/```(?:json)?\s*([\s\S]*?)```/);
+    if (fenceMatch) {
+      jsonStr = fenceMatch[1].trim();
+    }
+    // If still not valid JSON, try to find a JSON object in the text
+    if (!jsonStr.startsWith("{")) {
+      const objMatch = jsonStr.match(/\{[\s\S]*\}/);
+      if (objMatch) jsonStr = objMatch[0];
+    }
 
     let parsed: TranslateResponse;
     try {
-      parsed = JSON.parse(cleaned);
+      parsed = JSON.parse(jsonStr);
     } catch {
       console.error("[translate] Failed to parse AI response:", raw);
       return Response.json(
