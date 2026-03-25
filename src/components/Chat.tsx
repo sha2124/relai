@@ -346,6 +346,8 @@ export function Chat() {
                     { href: "/translate", label: "Conflict Translator", icon: "🔄" },
                     { href: "/repair", label: "Repair Script", icon: "💛" },
                     { href: "/insights", label: "Your Patterns", icon: "🔍" },
+                    { href: "/health-score", label: "Health Score", icon: "💚" },
+                    { href: "/nudges", label: "Nudges", icon: "🔔" },
                     { href: "/profile", label: "My Profile", icon: "👤" },
                     { href: "/dashboard", label: "Progress", icon: "📊" },
                     { href: "/journal", label: "Journal", icon: "📓" },

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Chat } from "@/components/Chat";
 import { createClient } from "@/lib/supabase/client";
 import { getArchetype, type Archetype } from "@/lib/quiz/archetypes";
+import NudgeBell from "@/components/NudgeBell";
 import type { User } from "@supabase/supabase-js";
 
 export default function Home() {
@@ -125,8 +126,12 @@ function Dashboard({ user, name, archetype }: { user: User; name: string; archet
             <button onClick={() => router.push("/journal")} className="font-heading font-medium text-sm tracking-tight text-outline hover:text-primary transition-colors">Journal</button>
             <button onClick={() => router.push("/profile")} className="font-heading font-medium text-sm tracking-tight text-outline hover:text-primary transition-colors">Account</button>
           </div>
-          <div className="flex items-center space-x-4">
-            <button onClick={() => router.push("/dashboard")} className="p-2 hover:bg-primary-container/20 rounded-full transition-all text-primary">
+          <div className="flex items-center space-x-2">
+            <NudgeBell />
+            <button onClick={() => router.push("/health-score")} className="p-2 hover:bg-primary-container/20 rounded-full transition-all text-primary" title="Health Score">
+              <span className="material-symbols-outlined">monitor_heart</span>
+            </button>
+            <button onClick={() => router.push("/dashboard")} className="p-2 hover:bg-primary-container/20 rounded-full transition-all text-primary" title="Progress">
               <span className="material-symbols-outlined">bar_chart</span>
             </button>
             <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container bg-primary-container/30 flex items-center justify-center cursor-pointer" onClick={() => router.push("/profile")}>
@@ -243,7 +248,7 @@ function Dashboard({ user, name, archetype }: { user: User; name: string; archet
           {/* ── Relationship Tools ── */}
           <section className="md:col-span-12">
             <h2 className="text-2xl font-heading font-bold text-on-surface mb-6">Relationship Tools</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               <button
                 type="button"
                 onClick={() => router.push("/translate")}
@@ -276,6 +281,28 @@ function Dashboard({ user, name, archetype }: { user: User; name: string; archet
                 </div>
                 <h3 className="font-heading font-bold text-on-surface mb-1">Your Patterns</h3>
                 <p className="text-sm text-on-surface-variant leading-relaxed">See what your conversations reveal — recurring themes, growth, and blind spots.</p>
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push("/health-score")}
+                className="bg-surface-container-lowest rounded-2xl p-6 border border-surface-variant text-left card-hover group"
+              >
+                <div className="w-12 h-12 bg-[#4a7c59]/15 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-2xl text-[#4a7c59]">monitor_heart</span>
+                </div>
+                <h3 className="font-heading font-bold text-on-surface mb-1">Health Score</h3>
+                <p className="text-sm text-on-surface-variant leading-relaxed">Weekly 0-100 score across 5 dimensions — track how your relationship is growing.</p>
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push("/nudges")}
+                className="bg-surface-container-lowest rounded-2xl p-6 border border-surface-variant text-left card-hover group"
+              >
+                <div className="w-12 h-12 bg-secondary-container/30 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-2xl text-secondary">notifications_active</span>
+                </div>
+                <h3 className="font-heading font-bold text-on-surface mb-1">Daily Nudges</h3>
+                <p className="text-sm text-on-surface-variant leading-relaxed">Personalized follow-ups, check-ins, and encouragement based on your activity.</p>
               </button>
             </div>
           </section>
