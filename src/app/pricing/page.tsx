@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useCallback, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { getUserSubscription, type SubscriptionInfo, type Plan } from "@/lib/subscription";
 
 const PLANS = [
   {
-    id: "free",
+    id: "free" as const,
     name: "Free",
     price: "$0",
     period: "Forever",
@@ -17,12 +18,11 @@ const PLANS = [
       "Growth edge & blind spots",
       "Shareable archetype card",
     ],
-    cta: "Current plan",
     ctaStyle: "border" as const,
     highlight: false,
   },
   {
-    id: "pro",
+    id: "pro" as const,
     name: "Pro",
     price: "$12",
     period: "/month",
@@ -36,12 +36,11 @@ const PLANS = [
       "Progress tracking dashboard",
       "Pattern insights over time",
     ],
-    cta: "Upgrade to Pro",
     ctaStyle: "primary" as const,
     highlight: true,
   },
   {
-    id: "premium",
+    id: "premium" as const,
     name: "Premium",
     price: "$24",
     period: "/month",
@@ -55,20 +54,175 @@ const PLANS = [
       "Voice sessions",
       "Priority support",
     ],
-    cta: "Upgrade to Premium",
     ctaStyle: "accent" as const,
     highlight: false,
   },
 ];
 
 export default function PricingPage() {
+  return (
+    <Suspense>
+      <PricingContent />
+    </Suspense>
+  );
+}
+
+function PricingContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
+  const [subscription, setSubscription] = useState<SubscriptionInfo | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
+  const [banner, setBanner] = useState<{ type: "success" | "canceled" | "error"; message: string } | null>(null);
+
+  // Check for post-checkout query params
+  useEffect(() => {
+    if (searchParams.get("success") === "true") {
+      setBanner({ type: "success", message: "You're all set! Your subscription is now active." });
+      // Clean up URL
+      window.history.replaceState({}, "", "/pricing");
+    } else if (searchParams.get("canceled") === "true") {
+      setBanner({ type: "canceled", message: "No changes made. You can upgrade anytime." });
+      window.history.replaceState({}, "", "/pricing");
+    }
+  }, [searchParams]);
+
+  // Fetch subscription status
+  useEffect(() => {
+    getUserSubscription()
+      .then(setSubscription)
+      .catch(() => setSubscription(null))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const currentPlan: Plan = subscription?.status === "active" ? subscription.plan : "free";
+  const hasStripeCustomer = !!subscription?.stripeCustomerId;
+
+  const handleCheckout = useCallback(async (planId: string) => {
+    if (planId === "free") return;
+
+    setCheckoutLoading(planId);
+    try {
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan: planId, billingCycle }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        if (res.status === 503) {
+          alert("Stripe integration coming soon! For now, all features are free.");
+        } else if (res.status === 401) {
+          router.push("/auth/login");
+        } else {
+          setBanner({ type: "error", message: data.error || "Something went wrong. Please try again." });
+        }
+        return;
+      }
+
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch {
+      setBanner({ type: "error", message: "Something went wrong. Please try again." });
+    } finally {
+      setCheckoutLoading(null);
+    }
+  }, [billingCycle, router]);
+
+  const handleManageSubscription = useCallback(async () => {
+    setCheckoutLoading("manage");
+    try {
+      const res = await fetch("/api/stripe/portal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        if (res.status === 503) {
+          alert("Stripe integration coming soon! For now, all features are free.");
+        } else {
+          setBanner({ type: "error", message: data.error || "Something went wrong." });
+        }
+        return;
+      }
+
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch {
+      setBanner({ type: "error", message: "Something went wrong. Please try again." });
+    } finally {
+      setCheckoutLoading(null);
+    }
+  }, []);
+
+  function getCtaLabel(planId: "free" | "pro" | "premium"): string {
+    if (planId === "free") {
+      return currentPlan === "free" ? "Current plan" : "Downgrade";
+    }
+    if (planId === currentPlan) return "Current plan";
+    // If user is on a paid plan and this is a different paid plan
+    if (currentPlan !== "free" && hasStripeCustomer) return "Manage subscription";
+    return `Upgrade to ${planId === "pro" ? "Pro" : "Premium"}`;
+  }
+
+  function isCtaDisabled(planId: "free" | "pro" | "premium"): boolean {
+    if (planId === currentPlan) return true;
+    if (planId === "free" && currentPlan === "free") return true;
+    return false;
+  }
+
+  function handleCtaClick(planId: "free" | "pro" | "premium") {
+    if (planId === currentPlan) return;
+
+    if (planId === "free" && currentPlan !== "free" && hasStripeCustomer) {
+      // Downgrade via portal
+      handleManageSubscription();
+      return;
+    }
+
+    if (currentPlan !== "free" && hasStripeCustomer) {
+      // Already on a paid plan, open portal to manage
+      handleManageSubscription();
+      return;
+    }
+
+    // New checkout
+    handleCheckout(planId);
+  }
 
   return (
     <div className="min-h-[100dvh] bg-gradient-warm">
       <div className="px-6 pt-12 pb-8">
         <div className="max-w-3xl mx-auto stagger-in">
+          {/* Post-checkout banner */}
+          {banner && (
+            <div
+              className={`mb-6 rounded-2xl px-5 py-4 text-sm font-medium flex items-center justify-between ${
+                banner.type === "success"
+                  ? "bg-green-50 border border-green-200 text-green-800"
+                  : banner.type === "error"
+                    ? "bg-red-50 border border-red-200 text-red-800"
+                    : "bg-amber-50 border border-amber-200 text-amber-800"
+              }`}
+            >
+              <span>{banner.message}</span>
+              <button
+                type="button"
+                onClick={() => setBanner(null)}
+                className="ml-4 shrink-0 text-current opacity-60 hover:opacity-100 transition-opacity"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
+              </button>
+            </div>
+          )}
+
           {/* Header */}
           <button
             type="button"
@@ -124,6 +278,11 @@ export default function PricingPage() {
                 ? `$${Math.round(parseInt(plan.price.replace("$", "")) * 0.8)}`
                 : plan.price;
 
+              const ctaLabel = getCtaLabel(plan.id);
+              const disabled = isCtaDisabled(plan.id);
+              const isLoading = checkoutLoading === plan.id || (checkoutLoading === "manage" && plan.id !== "free");
+              const isCurrentPlan = plan.id === currentPlan;
+
               return (
                 <div
                   key={plan.id}
@@ -139,9 +298,16 @@ export default function PricingPage() {
                     </div>
                   )}
 
-                  <p className="text-xs tracking-widest uppercase text-[#7a766f] font-medium mb-2">
-                    {plan.name}
-                  </p>
+                  <div className="flex items-center gap-2 mb-2">
+                    <p className="text-xs tracking-widest uppercase text-[#7a766f] font-medium">
+                      {plan.name}
+                    </p>
+                    {isCurrentPlan && !loading && (
+                      <span className="text-[10px] bg-[#8d4837]/10 text-[#8d4837] px-2 py-0.5 rounded-full font-semibold">
+                        Current
+                      </span>
+                    )}
+                  </div>
                   <p className="text-3xl font-semibold text-[#312e29] mb-1">
                     {displayPrice}
                     {plan.period !== "Forever" && (
@@ -169,21 +335,29 @@ export default function PricingPage() {
 
                   <button
                     type="button"
-                    onClick={() => {
-                      if (plan.id === "free") return;
-                      // TODO: Stripe checkout
-                      alert("Stripe integration coming soon! For now, all features are free.");
-                    }}
-                    disabled={plan.id === "free"}
+                    onClick={() => handleCtaClick(plan.id)}
+                    disabled={disabled || isLoading || loading}
                     className={`w-full rounded-xl px-5 py-3.5 text-sm font-semibold transition-all ${
-                      plan.ctaStyle === "primary"
-                        ? "bg-gradient-to-r from-[#8d4837] to-[#6d2e20] text-white hover:shadow-md"
-                        : plan.ctaStyle === "accent"
-                          ? "bg-gradient-to-r from-[#81502b] to-[#6e401c] text-white hover:shadow-md"
-                          : "border border-[#e2dcd1] bg-white/50 text-[#7a766f] cursor-default"
-                    }`}
+                      disabled
+                        ? "border border-[#e2dcd1] bg-white/50 text-[#7a766f] cursor-default"
+                        : plan.ctaStyle === "primary"
+                          ? "bg-gradient-to-r from-[#8d4837] to-[#6d2e20] text-white hover:shadow-md"
+                          : plan.ctaStyle === "accent"
+                            ? "bg-gradient-to-r from-[#81502b] to-[#6e401c] text-white hover:shadow-md"
+                            : "border border-[#e2dcd1] bg-white/50 text-[#7a766f] hover:border-[#8d4837] hover:text-[#8d4837]"
+                    } ${isLoading ? "opacity-60" : ""}`}
                   >
-                    {plan.cta}
+                    {isLoading ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                        Loading...
+                      </span>
+                    ) : (
+                      ctaLabel
+                    )}
                   </button>
                 </div>
               );
