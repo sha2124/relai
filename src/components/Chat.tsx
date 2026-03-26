@@ -357,6 +357,7 @@ export function Chat() {
                     { href: "/partner-bridge", label: "Partner Bridge", icon: "\u{1F309}" },
                     { href: "/conflict-detection", label: "Conflict Map", icon: "\u26A1" },
                     { href: "/mediate", label: "Mediated Session", icon: "🕊️" },
+                    { href: "/voice-journal", label: "Voice Journal", icon: "🎙️" },
                     { href: "/safety", label: "Safety Check", icon: "🛡️" },
                     { href: "#save", label: "Save Conversation", icon: "💾" },
                   ].map((item) => (
